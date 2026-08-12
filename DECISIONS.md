@@ -10,9 +10,7 @@ Stack: React (frontend) + .NET / Clean Architecture (backend) + PostgreSQL (db)
 
 ## Entry 1 — 2026-08-12 — Project kickoff & requirements checklist
 
-**Decision:** Build Vehicles end-to-end. Repo created at `Intermediate Prep\BrunoVehicleHire\`, git initialized. Build order: repo → DB → backend → frontend → deploy. This file tracks decisions; the checklists below track spec coverage and get checked off as work lands (with a reference to the entry that satisfied them).
-
-**Why:** Kyle owns implementation and drives instructions; this log exists so every spec requirement can be traced to a decision and a stage, and so the reasoning is defensible in a promotion review — not just "it works." Repo lives inside the existing workspace folder (not a sibling folder) so the working Claude Code session stays intact for the whole build.
+Building Vehicles end-to-end. Build order: repo → DB → backend → frontend → deploy. Checklists below track spec coverage as work lands.
 
 ### Checklist — Repo / Project Setup
 - [ ] Solution structure created (4 backend projects: Domain, Application, Infrastructure, API)
@@ -65,3 +63,9 @@ Stack: React (frontend) + .NET / Clean Architecture (backend) + PostgreSQL (db)
 - [ ] CORS configured for deployed frontend origin
 
 **Status:** Kickoff complete. Next stage: Database design (Entry 2).
+
+---
+
+## Entry 2 — 2026-08-12 — Postgres via Docker
+
+Local Postgres runs via Docker Compose (`postgres:16`) instead of a native install, for deployment parity and easy reproducibility. Credentials in `.env` (gitignored), not hardcoded in compose. pgAdmin connects to it as GUI client.
