@@ -9,7 +9,7 @@
 - [ ] Git commit convention agreed (meaningful messages — spec requirement)
 
 ### Checklist — Database
-- [ ] PostgreSQL instance available (local/dev)
+- [x] PostgreSQL instance available (local/dev)
 - [ ] Vehicle entity fields modeled: Id (Guid), RegistrationNumber (unique), Make, Model, Year, IsDeleted, CreatedDate
 - [ ] EF Core code-first approach
 - [ ] Migrations included in solution
