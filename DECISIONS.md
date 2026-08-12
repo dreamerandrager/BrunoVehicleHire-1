@@ -1,16 +1,5 @@
-# Decision Log — Bruno Vehicle Hire (Vehicles Module)
-
-Purpose: running record of architecture/implementation decisions, why they were made, and where each spec requirement is satisfied. Entries are appended chronologically, never rewritten — corrections get a new entry that supersedes the old one.
-
-Spec reference: `Bruno - Intermediate Level Movement 2.pdf`
-Entity chosen: **Vehicles**
-Stack: React (frontend) + .NET / Clean Architecture (backend) + PostgreSQL (db)
 
 ---
-
-## Entry 1 — 2026-08-12 — Project kickoff & requirements checklist
-
-Building Vehicles end-to-end. Build order: repo → DB → backend → frontend → deploy. Checklists below track spec coverage as work lands.
 
 ### Checklist — Repo / Project Setup
 - [ ] Solution structure created (4 backend projects: Domain, Application, Infrastructure, API)
@@ -62,10 +51,8 @@ Building Vehicles end-to-end. Build order: repo → DB → backend → frontend 
 - [ ] Environment variables / secrets handled (API key, DB connection string)
 - [ ] CORS configured for deployed frontend origin
 
-**Status:** Kickoff complete. Next stage: Database design (Entry 2).
-
 ---
 
-## Entry 2 — 2026-08-12 — Postgres via Docker
+### Docker Postgres Container
 
 Local Postgres runs via Docker Compose (`postgres:16`) instead of a native install, for deployment parity and easy reproducibility. Credentials in `.env` (gitignored), not hardcoded in compose. pgAdmin connects to it as GUI client.
