@@ -3,15 +3,31 @@ Decisions
 - Mapping extensions: Vehicle -> VehicleDto mapping lives in a dedicated Vehicles/Mappings/MappingExtensions.cs (extension method vehicle.ToModel()) rather than a static factory on the DTO itself. Intentional from the start to scale cleanly as more entities/mappings get added later.
 - Repository placement: IVehicleRepository interface lives in Application, concrete EF Core implementation lives in Infrastructure. Dependencies point inward (Infrastructure -> Application -> Domain), so Application never depends on Infrastructure.
 - Mapping extensions location: lives in Application, not Domain, because VehicleDto is an Application concern (the shape exposed outward). Domain is the innermost layer and can't reference Application, so mapping code touching both types has to sit in Application.
+- DB connection string: stored via .NET User Secrets (dotnet user-secrets) rather than appsettings.Development.json, so the real Postgres credentials never get committed to git — same reasoning as .env being gitignored for Docker.
 
 Questions
 Q: What's the dependency direction across the layers?
 A: Domain depends on nothing. Application depends on Domain only. Infrastructure depends on Application (+ Domain transitively). Api depends on both Infrastructure and Application. So Domain <- Application <- Infrastructure <- Api - dependencies always point inward, toward Domain.
 
+Q: What do Up() and Down() mean in an EF Core migration?
+A: Up() applies the migration - the schema changes to move the DB forward (e.g. CreateTable). Down() reverses it - what to run to undo this migration and get back to the previous schema state (e.g. DropTable). Down() is what runs if you ever roll back a migration.
+
 Q: What is Swashbuckle?
 A: .NET library that auto-generates OpenAPI/Swagger docs from controllers/DTOs and serves the Swagger UI page. Satisfies the spec's "Swagger documentation enabled" requirement.
 
 Technical Details
+
+EF Core persistence setup
+- Infrastructure/Persistence/ApplicationDbContext.cs — DbSet<Vehicle>, applies entity configs from the assembly (ApplyConfigurationsFromAssembly) so new entity configs get picked up automatically without editing OnModelCreating each time.
+- Infrastructure/Persistence/Configurations/VehicleConfiguration.cs (IEntityTypeConfiguration<Vehicle>) — table name "Vehicles", unique index on RegistrationNumber, max lengths on string fields (RegistrationNumber 20, Make/Model 50, SellerName 100), PricePerDay mapped as numeric(10,2) (never float/double for money), Colour/ServiceHistory enums stored as int.
+- Soft delete enforced via a global query filter on the entity config (HasQueryFilter(v => !v.IsDeleted)) rather than each handler/query remembering to filter it out — every query against Vehicles automatically excludes soft-deleted rows at the EF Core level.
+- Program.cs registers ApplicationDbContext via AddDbContext with UseNpgsql, reading the connection string from configuration (ConnectionStrings:DefaultConnection) — supplied via .NET User Secrets locally (see commands below), never hardcoded or committed.
+
+Code-first migrations — flow
+- Code-first means the C# entity + EF Core config is the source of truth for the schema, not a hand-written SQL script. Flow: 1) define/change Vehicle entity (Domain) 2) configure it via VehicleConfiguration (Infrastructure) 3) run "dotnet ef migrations add <Name>" - EF diffs the model against the last snapshot and generates a migration file with Up()/Down() 4) run "dotnet ef database update" - applies pending migrations to the actual DB.
+- Requires Microsoft.EntityFrameworkCore.Design in both the project holding the DbContext (Infrastructure) and the startup project (Api) - the CLI tools need it in the startup project to build/run the app's DI container.
+- Each migration produces 3 files: <timestamp>_<Name>.cs (the actual Up/Down), <timestamp>_<Name>.Designer.cs (tooling metadata), and ApplicationDbContextModelSnapshot.cs (single file, current full model state, updated every migration so EF can diff future changes against it). All 3 get committed to git.
+- First migration: InitialCreate - creates the Vehicles table matching VehicleConfiguration (unique index on RegistrationNumber, numeric(10,2) PricePerDay, enums as int, etc.).
 
 Backend setup — commands run
 
