@@ -42,6 +42,9 @@ Code-first migrations — flow
 - Each migration produces 3 files: <timestamp>_<Name>.cs (the actual Up/Down), <timestamp>_<Name>.Designer.cs (tooling metadata), and ApplicationDbContextModelSnapshot.cs (single file, current full model state, updated every migration so EF can diff future changes against it). All 3 get committed to git.
 - First migration: InitialCreate - creates the Vehicles table matching VehicleConfiguration (unique index on RegistrationNumber, numeric(10,2) PricePerDay, enums as int, etc.).
 
+Swagger wiring
+- Replaced the template's built-in AddOpenApi()/MapOpenApi() (just a raw OpenAPI JSON document, no browsable UI) with Swashbuckle: AddEndpointsApiExplorer() + AddSwaggerGen() in services, UseSwagger() + UseSwaggerUI() in the dev-only pipeline block. This is what actually gives a visual Swagger page at /swagger, satisfying the spec's "Swagger documentation enabled" requirement.
+
 Backend setup — commands run
 
 1. Solution + projects (Clean Architecture, 4 layers)
