@@ -7,25 +7,25 @@
 
 ### Checklist — Database
 - [x] PostgreSQL instance available (local/dev)
-- [ ] Vehicle entity fields modeled: Id (Guid), RegistrationNumber (unique), Make, Model, Year, IsDeleted, CreatedDate
-- [ ] EF Core code-first approach
-- [ ] Migrations included in solution
-- [ ] Unique constraint on RegistrationNumber enforced at DB level
-- [ ] Soft-deleted vehicles excluded from default query filter
+- [x] Vehicle entity fields modeled: Id (Guid), RegistrationNumber (unique), Make, Model, Year, IsDeleted, CreatedDate
+- [x] EF Core code-first approach
+- [x] Migrations included in solution
+- [x] Unique constraint on RegistrationNumber enforced at DB level
+- [x] Soft-deleted vehicles excluded from default query filter
 
 ### Checklist — Backend (.NET / Clean Architecture)
-- [ ] Domain layer — entity only, no infrastructure dependency
-- [ ] Application layer — Commands, Queries, Validators present
-- [ ] CQRS pattern applied
-- [ ] MediatR (or equivalent) wired
-- [ ] FluentValidation (or similar) wired
-- [ ] Repository pattern implemented
-- [ ] Functional rules implemented: Create, Update, Get by RegistrationNumber, Paginated list, Soft delete
-- [ ] REST API — proper HTTP verbs + status codes
-- [ ] API Key security (header-based)
-- [ ] Swagger enabled
-- [ ] No business logic in controllers
-- [ ] Unit tests: ≥1 Command, ≥1 Query
+- [x] Domain layer — entity only, no infrastructure dependency
+- [ ] Application layer — Commands, Queries, Validators present — Commands + Validators done, but no Queries exist right now (GetVehicleByRegistrationNumber was removed and not replaced yet)
+- [x] CQRS pattern applied
+- [x] MediatR (or equivalent) wired
+- [x] FluentValidation (or similar) wired
+- [x] Repository pattern implemented
+- [ ] Functional rules implemented: Create, Update, Get by RegistrationNumber, Paginated list, Soft delete — only Create is done; Update, Get by RegistrationNumber, Paginated list, Soft delete all still missing
+- [ ] REST API — proper HTTP verbs + status codes — established correctly for the one endpoint that exists (POST -> 201, 400, 401), but only one endpoint exists so far
+- [x] API Key security (header-based)
+- [x] Swagger enabled
+- [x] No business logic in controllers
+- [ ] Unit tests: ≥1 Command, ≥1 Query — no test project exists yet at all
 
 ### Checklist — Frontend (React)
 - [ ] Functional components + TypeScript
