@@ -2,6 +2,7 @@ Decisions
 - Docker Postgres Container: Local Postgres runs via Docker Compose (postgres:16) instead of a native install, for deployment parity and easy reproducibility. Credentials in .env (gitignored), not hardcoded in compose. pgAdmin connects to it as GUI client.
 - Mapping extensions: Vehicle -> VehicleDto mapping lives in a dedicated Vehicles/Mappings/MappingExtensions.cs (extension method vehicle.ToModel()) rather than a static factory on the DTO itself. Intentional from the start to scale cleanly as more entities/mappings get added later.
 - Repository placement: IVehicleRepository interface lives in Application, concrete EF Core implementation lives in Infrastructure. Dependencies point inward (Infrastructure -> Application -> Domain), so Application never depends on Infrastructure.
+- Mapping extensions location: lives in Application, not Domain, because VehicleDto is an Application concern (the shape exposed outward). Domain is the innermost layer and can't reference Application, so mapping code touching both types has to sit in Application.
 
 Questions
 Q: What is Swashbuckle?
