@@ -1,0 +1,12 @@
+C:\Users\KyleMarshall\Desktop\Intermediate Prep\BrunoVehicleHire\BrunoVehicleHire.Domain\bin\Debug\net10.0\BrunoVehicleHire.Domain.deps.json
+C:\Users\KyleMarshall\Desktop\Intermediate Prep\BrunoVehicleHire\BrunoVehicleHire.Domain\bin\Debug\net10.0\BrunoVehicleHire.Domain.dll
+C:\Users\KyleMarshall\Desktop\Intermediate Prep\BrunoVehicleHire\BrunoVehicleHire.Domain\bin\Debug\net10.0\BrunoVehicleHire.Domain.pdb
+C:\Users\KyleMarshall\Desktop\Intermediate Prep\BrunoVehicleHire\BrunoVehicleHire.Domain\obj\Debug\net10.0\BrunoVehicleHire.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\KyleMarshall\Desktop\Intermediate Prep\BrunoVehicleHire\BrunoVehicleHire.Domain\obj\Debug\net10.0\BrunoVehicleHire.Domain.AssemblyInfoInputs.cache
+C:\Users\KyleMarshall\Desktop\Intermediate Prep\BrunoVehicleHire\BrunoVehicleHire.Domain\obj\Debug\net10.0\BrunoVehicleHire.Domain.AssemblyInfo.cs
+C:\Users\KyleMarshall\Desktop\Intermediate Prep\BrunoVehicleHire\BrunoVehicleHire.Domain\obj\Debug\net10.0\BrunoVehicleHire.Domain.csproj.CoreCompileInputs.cache
+C:\Users\KyleMarshall\Desktop\Intermediate Prep\BrunoVehicleHire\BrunoVehicleHire.Domain\obj\Debug\net10.0\BrunoVehicleHire.Domain.sourcelink.json
+C:\Users\KyleMarshall\Desktop\Intermediate Prep\BrunoVehicleHire\BrunoVehicleHire.Domain\obj\Debug\net10.0\BrunoVehicleHire.Domain.dll
+C:\Users\KyleMarshall\Desktop\Intermediate Prep\BrunoVehicleHire\BrunoVehicleHire.Domain\obj\Debug\net10.0\refint\BrunoVehicleHire.Domain.dll
+C:\Users\KyleMarshall\Desktop\Intermediate Prep\BrunoVehicleHire\BrunoVehicleHire.Domain\obj\Debug\net10.0\BrunoVehicleHire.Domain.pdb
+C:\Users\KyleMarshall\Desktop\Intermediate Prep\BrunoVehicleHire\BrunoVehicleHire.Domain\obj\Debug\net10.0\ref\BrunoVehicleHire.Domain.dll

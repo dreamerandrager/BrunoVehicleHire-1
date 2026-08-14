@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="BrunoVehicleHire.Api/BrunoVehicleHire.Api.csproj" />
+  <Project Path="BrunoVehicleHire.Application/BrunoVehicleHire.Application.csproj" />
+  <Project Path="BrunoVehicleHire.Domain/BrunoVehicleHire.Domain.csproj" />
+  <Project Path="BrunoVehicleHire.Infrastructure/BrunoVehicleHire.Infrastructure.csproj" />
+</Solution>
