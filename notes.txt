@@ -5,6 +5,9 @@ Decisions
 - Mapping extensions location: lives in Application, not Domain, because VehicleDto is an Application concern (the shape exposed outward). Domain is the innermost layer and can't reference Application, so mapping code touching both types has to sit in Application.
 
 Questions
+Q: What's the dependency direction across the layers?
+A: Domain depends on nothing. Application depends on Domain only. Infrastructure depends on Application (+ Domain transitively). Api depends on both Infrastructure and Application. So Domain <- Application <- Infrastructure <- Api - dependencies always point inward, toward Domain.
+
 Q: What is Swashbuckle?
 A: .NET library that auto-generates OpenAPI/Swagger docs from controllers/DTOs and serves the Swagger UI page. Satisfies the spec's "Swagger documentation enabled" requirement.
 
