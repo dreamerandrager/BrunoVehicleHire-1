@@ -44,6 +44,7 @@ Code-first migrations — flow
 
 Swagger wiring
 - Replaced the template's built-in AddOpenApi()/MapOpenApi() (just a raw OpenAPI JSON document, no browsable UI) with Swashbuckle: AddEndpointsApiExplorer() + AddSwaggerGen() in services, UseSwagger() + UseSwaggerUI() in the dev-only pipeline block. This is what actually gives a visual Swagger page at /swagger, satisfying the spec's "Swagger documentation enabled" requirement.
+- Wiring Program.cs alone isn't enough to actually see the UI when running from Visual Studio - Properties/launchSettings.json also needs "launchBrowser": true and "launchUrl": "swagger" on each profile (http/https), otherwise the app runs fine but no browser opens (or it opens to a blank/404 root page with no launchUrl set).
 
 Backend setup — commands run
 
