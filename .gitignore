@@ -1,1 +1,16 @@
 .env
+
+# .NET
+bin/
+obj/
+.vs/
+*.user
+
+# Node / frontend
+node_modules/
+dist/
+build/
+.vite/
+
+# Editor
+.idea/

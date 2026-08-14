@@ -1,0 +1,37 @@
+Backend setup — commands run
+
+1. Solution + projects (Clean Architecture, 4 layers)
+dotnet new sln -n BrunoVehicleHire
+dotnet new classlib -n BrunoVehicleHire.Domain
+dotnet new classlib -n BrunoVehicleHire.Application
+dotnet new classlib -n BrunoVehicleHire.Infrastructure
+dotnet new webapi -n BrunoVehicleHire.Api
+
+dotnet sln add BrunoVehicleHire.Domain
+dotnet sln add BrunoVehicleHire.Application
+dotnet sln add BrunoVehicleHire.Infrastructure
+dotnet sln add BrunoVehicleHire.Api
+
+2. Project references (dependency direction: Api -> Infrastructure/Application -> Application -> Domain)
+dotnet add BrunoVehicleHire.Application reference BrunoVehicleHire.Domain
+dotnet add BrunoVehicleHire.Infrastructure reference BrunoVehicleHire.Application
+dotnet add BrunoVehicleHire.Api reference BrunoVehicleHire.Infrastructure
+dotnet add BrunoVehicleHire.Api reference BrunoVehicleHire.Application
+
+Verified with: dotnet build
+
+3. NuGet packages
+dotnet add BrunoVehicleHire.Application package MediatR
+dotnet add BrunoVehicleHire.Application package FluentValidation.DependencyInjectionExtensions
+
+dotnet add BrunoVehicleHire.Infrastructure package Microsoft.EntityFrameworkCore
+dotnet add BrunoVehicleHire.Infrastructure package Npgsql.EntityFrameworkCore.PostgreSQL
+dotnet add BrunoVehicleHire.Infrastructure package Microsoft.EntityFrameworkCore.Design
+
+dotnet add BrunoVehicleHire.Api package Swashbuckle.AspNetCore
+
+Verified with: dotnet build
+
+Questions
+Q: What is Swashbuckle?
+A: .NET library that auto-generates OpenAPI/Swagger docs from controllers/DTOs and serves the Swagger UI page. Satisfies the spec's "Swagger documentation enabled" requirement.
