@@ -1,6 +1,3 @@
-
----
-
 ### Checklist — Repo / Project Setup
 - [ ] Solution structure created (4 backend projects: Domain, Application, Infrastructure, API)
 - [ ] Frontend project scaffolded (React + TypeScript + Vite)
@@ -56,9 +53,3 @@
 - [ ] Full solution compiles and runs end-to-end
 - [ ] Naming conventions consistent throughout
 - [ ] Simplicity check — no overengineering, no unused abstractions
-
----
-
-### Docker Postgres Container
-
-Local Postgres runs via Docker Compose (`postgres:16`) instead of a native install, for deployment parity and easy reproducibility. Credentials in `.env` (gitignored), not hardcoded in compose. pgAdmin connects to it as GUI client.
