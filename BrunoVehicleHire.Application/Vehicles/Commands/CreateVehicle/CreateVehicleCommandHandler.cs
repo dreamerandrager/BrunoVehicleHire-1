@@ -19,16 +19,16 @@ public class CreateVehicleCommandHandler : IRequestHandler<CreateVehicleCommand,
     {
         var vehicle = new Vehicle(
             request.RegistrationNumber,
+            request.VehicleType,
             request.Make,
             request.Model,
             request.Year,
-            request.Mileage,
             request.Colour,
-            request.ServiceHistory,
             request.SellerName,
             request.PricePerDay,
             request.HireStartDate,
-            request.HireEndDate);
+            request.HireEndDate,
+            request.ImageUrls);
 
         await _vehicleRepository.AddAsync(vehicle, cancellationToken);
         await _vehicleRepository.SaveChangesAsync(cancellationToken);

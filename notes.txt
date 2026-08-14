@@ -4,6 +4,8 @@ Decisions
 - Repository placement: IVehicleRepository interface lives in Application, concrete EF Core implementation lives in Infrastructure. Dependencies point inward (Infrastructure -> Application -> Domain), so Application never depends on Infrastructure.
 - Mapping extensions location: lives in Application, not Domain, because VehicleDto is an Application concern (the shape exposed outward). Domain is the innermost layer and can't reference Application, so mapping code touching both types has to sit in Application.
 - DB connection string: stored via .NET User Secrets (dotnet user-secrets) rather than appsettings.Development.json, so the real Postgres credentials never get committed to git — same reasoning as .env being gitignored for Docker.
+- Vehicle type: Bruno is a general vehicle hire business, not just cars — added a VehicleType enum on Vehicle rather than modelling per-type inheritance. Business reason: all vehicle types share the same fields for this system's purposes, so a discriminator enum is simpler than a type hierarchy and still lets the fleet expand to new vehicle types by just adding an enum value. Widened to cover non-road vehicles too: Car, Suv, Van, Truck, Bus, Minibus, Motorcycle, Trailer, Tractor, Helicopter, Boat, Other.
+- Removed Mileage and ServiceHistory from Vehicle: follow-up from the VehicleType change - both were car/road-vehicle-specific assumptions (odometer km, dealership-franchise servicing) that don't generalize to a helicopter or tractor, and neither is in the spec's required fields, so they were dropped rather than reworked.
 
 Questions
 Q: What's the dependency direction across the layers?

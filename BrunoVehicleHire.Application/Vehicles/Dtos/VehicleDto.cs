@@ -6,15 +6,15 @@ public class VehicleDto
 {
     public Guid Id { get; set; }
     public string RegistrationNumber { get; set; } = string.Empty;
+    public VehicleType VehicleType { get; set; }
     public string Make { get; set; } = string.Empty;
     public string Model { get; set; } = string.Empty;
     public int Year { get; set; }
-    public double Mileage { get; set; }
     public VehicleColour Colour { get; set; }
-    public ServiceHistory ServiceHistory { get; set; }
     public string SellerName { get; set; } = string.Empty;
     public decimal PricePerDay { get; set; }
     public DateTime? HireStartDate { get; set; }
     public DateTime? HireEndDate { get; set; }
+    public List<string> ImageUrls { get; set; } = new();
     public DateTime CreatedDate { get; set; }
 }

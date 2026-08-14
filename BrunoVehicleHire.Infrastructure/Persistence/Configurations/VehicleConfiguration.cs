@@ -34,10 +34,10 @@ public class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
         builder.Property(v => v.PricePerDay)
             .HasPrecision(10, 2);
 
-        builder.Property(v => v.Colour)
+        builder.Property(v => v.VehicleType)
             .HasConversion<int>();
 
-        builder.Property(v => v.ServiceHistory)
+        builder.Property(v => v.Colour)
             .HasConversion<int>();
 
         builder.HasQueryFilter(v => !v.IsDeleted);

@@ -6,14 +6,14 @@ namespace BrunoVehicleHire.Application.Vehicles.Commands.CreateVehicle;
 
 public record CreateVehicleCommand(
     string RegistrationNumber,
+    VehicleType VehicleType,
     string Make,
     string Model,
     int Year,
-    double Mileage,
     VehicleColour Colour,
-    ServiceHistory ServiceHistory,
     string SellerName,
     decimal PricePerDay,
     DateTime? HireStartDate,
-    DateTime? HireEndDate
+    DateTime? HireEndDate,
+    List<string>? ImageUrls
 ) : IRequest<VehicleDto>;

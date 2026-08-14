@@ -9,16 +9,16 @@ public static class MappingExtensions
     {
         Id = vehicle.Id,
         RegistrationNumber = vehicle.RegistrationNumber,
+        VehicleType = vehicle.VehicleType,
         Make = vehicle.Make,
         Model = vehicle.Model,
         Year = vehicle.Year,
-        Mileage = vehicle.Mileage,
         Colour = vehicle.Colour,
-        ServiceHistory = vehicle.ServiceHistory,
         SellerName = vehicle.SellerName,
         PricePerDay = vehicle.PricePerDay,
         HireStartDate = vehicle.HireStartDate,
         HireEndDate = vehicle.HireEndDate,
+        ImageUrls = vehicle.ImageUrls,
         CreatedDate = vehicle.CreatedDate
     };
 }
