@@ -6,6 +6,7 @@ Decisions
 - DB connection string: stored via .NET User Secrets (dotnet user-secrets) rather than appsettings.Development.json, so the real Postgres credentials never get committed to git — same reasoning as .env being gitignored for Docker.
 - Vehicle type: Bruno is a general vehicle hire business, not just cars — added a VehicleType enum on Vehicle rather than modelling per-type inheritance. Business reason: all vehicle types share the same fields for this system's purposes, so a discriminator enum is simpler than a type hierarchy and still lets the fleet expand to new vehicle types by just adding an enum value. Widened to cover non-road vehicles too: Car, Suv, Van, Truck, Bus, Minibus, Motorcycle, Trailer, Tractor, Helicopter, Boat, Other.
 - Removed Mileage and ServiceHistory from Vehicle: follow-up from the VehicleType change - both were car/road-vehicle-specific assumptions (odometer km, dealership-franchise servicing) that don't generalize to a helicopter or tractor, and neither is in the spec's required fields, so they were dropped rather than reworked.
+- Validation error shape: ExceptionHandlingMiddleware now returns FluentValidation failures as a field-keyed errors dictionary (ValidationProblemDetails, RFC 7807 - {"errors": {"PricePerDay": ["..."]}}) instead of a flat list of message strings. Matches ASP.NET Core's own built-in model-binding error shape, so the frontend has one consistent error format and can map errors[fieldName] straight to the matching input for inline validation display.
 
 Questions
 Q: What's the dependency direction across the layers?
@@ -13,6 +14,9 @@ A: Domain depends on nothing. Application depends on Domain only. Infrastructure
 
 Q: What do Up() and Down() mean in an EF Core migration?
 A: Up() applies the migration - the schema changes to move the DB forward (e.g. CreateTable). Down() reverses it - what to run to undo this migration and get back to the previous schema state (e.g. DropTable). Down() is what runs if you ever roll back a migration.
+
+Q: The validation failure is thrown inside the MediatR pipeline behavior, not the controller - how does that error actually reach the frontend as a response?
+A: Nothing in between catches it - the ValidationException just propagates up through every awaited caller (pipeline behavior -> MediatR.Send -> controller action -> MVC internals) until it hits ExceptionHandlingMiddleware, which wraps the entire rest of the pipeline in a try/catch (it's registered before MapControllers, so its "await _next(context)" covers routing + controller + MediatR + handler, all of it). That catch block is what actually sets the 400 status and writes the ValidationProblemDetails JSON to the real HTTP response. So the frontend just gets a normal HTTP 400 + JSON body like any other error - nothing special on its end.
 
 Q: What is Swashbuckle?
 A: .NET library that auto-generates OpenAPI/Swagger docs from controllers/DTOs and serves the Swagger UI page. Satisfies the spec's "Swagger documentation enabled" requirement.
