@@ -45,11 +45,17 @@
 - [ ] Client-side validation
 - [ ] Environment-based API config (no hardcoded URLs)
 - [ ] Basic reusable components (button, form input)
+- [ ] Clear state management approach
 
 ### Checklist — Deployment (not spec-required, planned anyway)
 - [ ] Hosting target chosen (backend + frontend + Postgres)
 - [ ] Environment variables / secrets handled (API key, DB connection string)
 - [ ] CORS configured for deployed frontend origin
+
+### Checklist — Final Review
+- [ ] Full solution compiles and runs end-to-end
+- [ ] Naming conventions consistent throughout
+- [ ] Simplicity check — no overengineering, no unused abstractions
 
 ---
 
