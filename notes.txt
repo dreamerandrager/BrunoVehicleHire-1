@@ -17,6 +17,17 @@ A: Up() applies the migration - the schema changes to move the DB forward (e.g. 
 Q: What is Swashbuckle?
 A: .NET library that auto-generates OpenAPI/Swagger docs from controllers/DTOs and serves the Swagger UI page. Satisfies the spec's "Swagger documentation enabled" requirement.
 
+Q: How does VehicleRepository know it's talking to Postgres instead of Mongo etc, and how does it get the DbContext - is that passed in by the handler?
+A: VehicleRepository itself doesn't know it's Postgres - it only knows ApplicationDbContext, and EF Core's LINQ API (_dbContext.Vehicles.FirstOrDefaultAsync(...) etc) is provider-agnostic. The one place Postgres gets chosen is Program.cs: builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(...)) - that .UseNpgsql(...) line is the single point in the whole solution that says "this DbContext talks to Postgres." If swapping to a different relational DB (e.g. SQL Server), that's the only line that would need to change (Mongo is a bigger swap since it isn't relational and EF Core doesn't support it the same way).
+
+On how the DbContext gets into the repository - not through the handler, and nothing is passed manually anywhere. It's constructor injection via .NET's built-in DI container:
+1. Program.cs registers two things: ApplicationDbContext (via AddDbContext) and IVehicleRepository -> VehicleRepository (via AddScoped).
+2. When a request comes in, MediatR asks the DI container for a CreateVehicleCommandHandler. Its constructor needs an IVehicleRepository - the container sees that's registered to resolve to VehicleRepository.
+3. To build a VehicleRepository, the container looks at its constructor, sees it needs an ApplicationDbContext, and supplies one automatically - because that's also registered.
+4. So: Api (DI container assembles everything) -> Handler only ever sees IVehicleRepository -> VehicleRepository only ever sees ApplicationDbContext -> ApplicationDbContext is the only thing that knows about Npgsql/Postgres.
+
+Nobody manually passes ApplicationDbContext anywhere - the container wires the whole chain based purely on constructor parameter types and what's registered in Program.cs. This is also why the handler can be unit tested by just mocking IVehicleRepository - it never needs a real database at all.
+
 Technical Details
 
 EF Core persistence setup
