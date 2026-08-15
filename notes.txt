@@ -8,6 +8,14 @@ Decisions
 - Removed Mileage and ServiceHistory from Vehicle: follow-up from the VehicleType change - both were car/road-vehicle-specific assumptions (odometer km, dealership-franchise servicing) that don't generalize to a helicopter or tractor, and neither is in the spec's required fields, so they were dropped rather than reworked.
 - Validation error shape: ExceptionHandlingMiddleware now returns FluentValidation failures as a field-keyed errors dictionary (ValidationProblemDetails, RFC 7807 - {"errors": {"PricePerDay": ["..."]}}) instead of a flat list of message strings. Matches ASP.NET Core's own built-in model-binding error shape, so the frontend has one consistent error format and can map errors[fieldName] straight to the matching input for inline validation display.
 - API key security: header-based (X-Api-Key) via ApiKeyMiddleware, checked against a key stored in User Secrets (same reasoning as the DB connection string - never hardcoded/committed). /swagger paths are excluded from the check so the docs UI itself stays browsable; actual endpoint calls (including from Swagger's "Try it out") still need the key. Swagger's Authorize button is wired up via a security definition so the key only needs to be entered once per session in the UI.
+- Azure Blob Storage credentials: reusing an existing POC storage account ("blobpocnexusdev"), new container "kylebruno" made for this project with anonymous read access at Blob level (not Container level - we only ever access known URLs, never need to enumerate the container, so Blob level is the better fit, not just "good enough"). Connection string + container name stored in User Secrets, same reasoning as everything else - anonymous access only covers reads, uploading always needs the connection string regardless of the container's public access setting.
+
+Secrets / Environment Variables (what's needed if/when this gets deployed)
+- ConnectionStrings:DefaultConnection - Postgres connection string. Local: User Secrets, pointing at the Docker container. Deploy: needs to point at whatever Postgres instance is hosted for production (a managed cloud Postgres, not the local Docker container) - set via the hosting platform's env vars/app settings, not committed.
+- ApiKey - the header-based API key value. Local: User Secrets. Deploy: needs an equivalent secret/env var configured on the hosting platform (e.g. Azure App Service Configuration, or a secrets manager) - should probably be a different, stronger value than the local dev key.
+- AzureBlobStorage:ConnectionString - Azure Storage account connection string (write access for uploads). Local: User Secrets. Deploy: same key needs to exist as a platform secret/env var; the underlying storage account itself doesn't need to change, since this container can be reused as-is.
+- AzureBlobStorage:ContainerName - "kylebruno". Not sensitive on its own (just a name), but kept alongside the connection string in User Secrets for consistency. Deploy: same value, just needs to be present as config wherever it's hosted.
+- Docker .env (POSTGRES_DB/USER/PASSWORD) - local-only concern for running Postgres in a container on this machine. Not relevant at deploy time since production would use a real hosted Postgres instance instead of this Docker setup.
 
 Questions
 Q: What's the dependency direction across the layers?
@@ -34,6 +42,11 @@ On how the DbContext gets into the repository - not through the handler, and not
 Nobody manually passes ApplicationDbContext anywhere - the container wires the whole chain based purely on constructor parameter types and what's registered in Program.cs. This is also why the handler can be unit tested by just mocking IVehicleRepository - it never needs a real database at all.
 
 Technical Details
+
+Azure Blob Storage (vehicle images)
+- Reusing an existing Azure resource from a prior POC rather than provisioning new: Storage account "blobpocnexusdev", new blob container "kylebruno" created specifically for this project, container anonymous access level set to "Blob" (anonymous read access to individual blobs by URL, not container listing).
+- Because the container allows anonymous blob-level read, no SAS token or auth is needed for retrieval - once a file is uploaded, its blob URL is directly publicly viewable. This is what satisfies "image retrieval from url" simply: the DB just needs to store the URL, no dedicated retrieval endpoint required.
+- Upload still goes through the backend (not client-direct-to-blob) so the backend controls what gets stored and appends the resulting URL to Vehicle.ImageUrls.
 
 EF Core persistence setup
 - Infrastructure/Persistence/ApplicationDbContext.cs — DbSet<Vehicle>, applies entity configs from the assembly (ApplyConfigurationsFromAssembly) so new entity configs get picked up automatically without editing OnModelCreating each time.

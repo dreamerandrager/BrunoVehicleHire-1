@@ -4,6 +4,7 @@ using BrunoVehicleHire.Application.Common.Interfaces;
 using BrunoVehicleHire.Application.Vehicles.Commands.CreateVehicle;
 using BrunoVehicleHire.Infrastructure.Persistence;
 using BrunoVehicleHire.Infrastructure.Persistence.Repositories;
+using BrunoVehicleHire.Infrastructure.Storage;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -35,6 +36,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
+
+builder.Services.Configure<AzureBlobStorageOptions>(builder.Configuration.GetSection("AzureBlobStorage"));
+builder.Services.AddScoped<IBlobStorageService, AzureBlobStorageService>();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateVehicleCommand).Assembly));
 builder.Services.AddValidatorsFromAssembly(typeof(CreateVehicleCommand).Assembly);
