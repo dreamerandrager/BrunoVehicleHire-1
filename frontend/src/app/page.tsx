@@ -44,6 +44,37 @@ export default function Home() {
   const [addError, setAddError] = useState<string | null>(null);
   const [addLoading, setAddLoading] = useState(false);
 
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageUploading, setImageUploading] = useState(false);
+  const [imageError, setImageError] = useState<string | null>(null);
+
+  async function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setImageUploading(true);
+    setImageError(null);
+    setImageUrl(null);
+
+    const body = new FormData();
+    body.append('file', file);
+
+    const res = await fetch(`${API_BASE}/api/images`, {
+      method: 'POST',
+      headers: { 'X-Api-Key': API_KEY },
+      body,
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      setImageUrl(data.url);
+    } else {
+      setImageError('Image upload failed.');
+    }
+
+    setImageUploading(false);
+  }
+
   async function handleSearch(e: FormEvent) {
     e.preventDefault();
     setSearchLoading(true);
@@ -66,7 +97,12 @@ export default function Home() {
     const res = await fetch(`${API_BASE}/api/vehicles`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Api-Key': API_KEY },
-      body: JSON.stringify({ ...form, hireStartDate: null, hireEndDate: null, imageUrls: [] }),
+      body: JSON.stringify({
+        ...form,
+        hireStartDate: null,
+        hireEndDate: null,
+        imageUrls: imageUrl ? [imageUrl] : [],
+      }),
     });
 
     const body = await res.json();
@@ -106,9 +142,17 @@ export default function Home() {
 
           {searchResult === 'not-found' && <p className="text-red-600">No vehicle found.</p>}
           {searchResult && searchResult !== 'not-found' && (
-            <pre className="bg-white border rounded p-3 text-sm whitespace-pre-wrap">
-              {JSON.stringify(searchResult, null, 2)}
-            </pre>
+            <>
+              <pre className="bg-white border rounded p-3 text-sm whitespace-pre-wrap">
+                {JSON.stringify(searchResult, null, 2)}
+              </pre>
+              <div className="flex gap-2 flex-wrap">
+                {searchResult.imageUrls.map((url) => (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img key={url} src={url} alt="Vehicle" className="w-32 h-32 object-cover rounded border" />
+                ))}
+              </div>
+            </>
           )}
         </form>
       )}
@@ -171,14 +215,30 @@ export default function Home() {
             value={form.pricePerDay}
             onChange={(e) => setForm({ ...form, pricePerDay: Number(e.target.value) })}
           />
+          <input type="file" accept="image/*" onChange={handleFileSelect} className="border p-2 rounded bg-white" />
+          {imageUploading && <p className="text-sm text-zinc-500">Uploading image...</p>}
+          {imageError && <p className="text-sm text-red-600">{imageError}</p>}
+          {imageUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={imageUrl} alt="Uploaded vehicle" className="w-32 h-32 object-cover rounded border" />
+          )}
+
           <button type="submit" className="px-4 py-2 rounded bg-green-600 text-white">
             {addLoading ? 'Adding...' : 'Add Vehicle'}
           </button>
 
           {addResult && (
-            <pre className="bg-white border rounded p-3 text-sm whitespace-pre-wrap">
-              {JSON.stringify(addResult, null, 2)}
-            </pre>
+            <>
+              <pre className="bg-white border rounded p-3 text-sm whitespace-pre-wrap">
+                {JSON.stringify(addResult, null, 2)}
+              </pre>
+              <div className="flex gap-2 flex-wrap">
+                {addResult.imageUrls.map((url) => (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img key={url} src={url} alt="Vehicle" className="w-32 h-32 object-cover rounded border" />
+                ))}
+              </div>
+            </>
           )}
           {addError && <pre className="text-red-600 whitespace-pre-wrap text-sm">{addError}</pre>}
         </form>
