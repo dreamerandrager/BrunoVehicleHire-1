@@ -62,6 +62,10 @@ Code-first migrations — flow
 - Each migration produces 3 files: <timestamp>_<Name>.cs (the actual Up/Down), <timestamp>_<Name>.Designer.cs (tooling metadata), and ApplicationDbContextModelSnapshot.cs (single file, current full model state, updated every migration so EF can diff future changes against it). All 3 get committed to git.
 - First migration: InitialCreate - creates the Vehicles table matching VehicleConfiguration (unique index on RegistrationNumber, numeric(10,2) PricePerDay, enums as int, etc.).
 
+CORS
+- Added a named CORS policy allowing http://localhost:3000 (Next.js dev server default port), AllowAnyHeader + AllowAnyMethod, registered via AddCors/UseCors in Program.cs.
+- Ordering matters: UseCors is placed BEFORE ApiKeyMiddleware in the pipeline. Browser CORS preflight (OPTIONS) requests never include custom headers like X-Api-Key, so if ApiKeyMiddleware ran first it would reject every preflight with 401 and break CORS entirely. ASP.NET's CORS middleware short-circuits matching preflight requests itself (responds directly, never calls next), so placing it first means preflights never reach the API key check at all.
+
 Swagger wiring
 - Replaced the template's built-in AddOpenApi()/MapOpenApi() (just a raw OpenAPI JSON document, no browsable UI) with Swashbuckle: AddEndpointsApiExplorer() + AddSwaggerGen() in services, UseSwagger() + UseSwaggerUI() in the dev-only pipeline block. This is what actually gives a visual Swagger page at /swagger, satisfying the spec's "Swagger documentation enabled" requirement.
 - Wiring Program.cs alone isn't enough to actually see the UI when running from Visual Studio - Properties/launchSettings.json also needs "launchBrowser": true and "launchUrl": "swagger" on each profile (http/https), otherwise the app runs fine but no browser opens (or it opens to a blank/404 root page with no launchUrl set).

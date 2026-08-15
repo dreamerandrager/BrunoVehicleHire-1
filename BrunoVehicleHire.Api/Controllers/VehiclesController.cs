@@ -1,5 +1,6 @@
 using BrunoVehicleHire.Application.Vehicles.Commands.CreateVehicle;
 using BrunoVehicleHire.Application.Vehicles.Dtos;
+using BrunoVehicleHire.Application.Vehicles.Queries.GetVehicleByRegistrationNumber;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,5 +24,15 @@ public class VehiclesController : ControllerBase
     {
         var vehicle = await _mediator.Send(command, cancellationToken);
         return Created($"/api/vehicles/{vehicle.Id}", vehicle);
+    }
+
+    [HttpGet("{registrationNumber}")]
+    [ProducesResponseType(typeof(VehicleDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<VehicleDto>> GetByRegistrationNumber(string registrationNumber, CancellationToken cancellationToken)
+    {
+        var vehicle = await _mediator.Send(new GetVehicleByRegistrationNumberQuery(registrationNumber), cancellationToken);
+
+        return vehicle is null ? NotFound() : Ok(vehicle);
     }
 }
