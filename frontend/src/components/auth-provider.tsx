@@ -2,11 +2,9 @@
 
 import { useEffect, useState, ReactNode } from "react";
 import { AuthContext } from "@/contexts/auth-context";
-import { clearApiKey } from "@/lib/auth-storage/clear-api-key";
-import { getApiKey } from "@/lib/auth-storage/get-api-key";
-import { setApiKey } from "@/lib/auth-storage/set-api-key";
+import { clearApiKey, getApiKey, setApiKey } from "@/services/auth-service";
 import { ApiError } from "@/lib/api-error";
-import { getVehiclesPaged } from "@/services/vehicles/get-vehicles-paged";
+import { getVehiclesPaged } from "@/services/vehicle-service";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthorized, setIsAuthorized] = useState(false);

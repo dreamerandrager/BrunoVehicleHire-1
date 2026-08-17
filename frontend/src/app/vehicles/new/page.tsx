@@ -13,8 +13,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TextFormField } from "@/components/text-form-field";
 import { SelectFormField } from "@/components/select-form-field";
 import { LoadingSpinner } from "@/components/loading-spinner";
-import { createVehicle } from "@/services/vehicles/create-vehicle";
-import { uploadVehicleImage } from "@/services/vehicles/upload-vehicle-image";
+import { createVehicle } from "@/services/vehicle-service";
+import { uploadImage } from "@/services/image-service";
 import { createVehicleSchema } from "@/schemas/create-vehicle-schema";
 import { VEHICLE_COLOURS } from "@/constants/vehicle-colours";
 import { VEHICLE_TYPES } from "@/constants/vehicle-types";
@@ -46,7 +46,7 @@ export default function NewVehiclePage() {
 
     setImageUploading(true);
     try {
-      const { url } = await uploadVehicleImage(file);
+      const { url } = await uploadImage(file);
       setImageUrl(url);
     } catch {
       toast.error("Image upload failed.");

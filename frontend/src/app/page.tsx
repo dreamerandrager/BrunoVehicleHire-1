@@ -24,8 +24,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { LoadingSpinner } from "@/components/loading-spinner";
-import { getVehiclesPaged } from "@/services/vehicles/get-vehicles-paged";
-import { softDeleteVehicle } from "@/services/vehicles/soft-delete-vehicle";
+import { getVehiclesPaged, softDeleteVehicle } from "@/services/vehicle-service";
 import { PagedResult } from "@/types/paged-result";
 import { Vehicle } from "@/types/vehicle";
 import { VEHICLE_COLOURS } from "@/constants/vehicle-colours";

@@ -1,4 +1,4 @@
-import { getApiKey } from "@/lib/auth-storage/get-api-key";
+import { getApiKey } from "@/services/auth-service";
 import { ApiError } from "@/lib/api-error";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -31,12 +31,16 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   return body as T;
 }
 
+function serializeBody(data: unknown): BodyInit | undefined {
+  if (data === undefined || data instanceof FormData) {
+    return data;
+  }
+  return JSON.stringify(data);
+}
+
 export const httpClient = {
   get: <T>(path: string) => request<T>(path, { method: "GET" }),
-  post: <T>(path: string, data?: unknown) =>
-    request<T>(path, { method: "POST", body: data !== undefined ? JSON.stringify(data) : undefined }),
-  postForm: <T>(path: string, formData: FormData) => request<T>(path, { method: "POST", body: formData }),
-  put: <T>(path: string, data?: unknown) =>
-    request<T>(path, { method: "PUT", body: data !== undefined ? JSON.stringify(data) : undefined }),
+  post: <T>(path: string, data?: unknown) => request<T>(path, { method: "POST", body: serializeBody(data) }),
+  put: <T>(path: string, data?: unknown) => request<T>(path, { method: "PUT", body: serializeBody(data) }),
   delete: <T>(path: string) => request<T>(path, { method: "DELETE" }),
 };

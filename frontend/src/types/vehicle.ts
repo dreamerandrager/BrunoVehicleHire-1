@@ -1,14 +1,11 @@
-import { VehicleType } from "@/types/vehicle-type";
-import { VehicleColour } from "@/types/vehicle-colour";
-
 export type Vehicle = {
   id: string;
   registrationNumber: string;
-  vehicleType: VehicleType;
+  vehicleType: number;
   make: string;
   model: string;
   year: number;
-  colour: VehicleColour;
+  colour: number;
   sellerName: string;
   pricePerDay: number;
   hireStartDate: string | null;

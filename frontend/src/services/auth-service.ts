@@ -4,3 +4,11 @@ export function getApiKey(): string | null {
   if (typeof window === "undefined") return null;
   return sessionStorage.getItem(API_KEY_STORAGE_KEY);
 }
+
+export function setApiKey(apiKey: string): void {
+  sessionStorage.setItem(API_KEY_STORAGE_KEY, apiKey);
+}
+
+export function clearApiKey(): void {
+  sessionStorage.removeItem(API_KEY_STORAGE_KEY);
+}
