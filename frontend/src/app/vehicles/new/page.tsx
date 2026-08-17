@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TextFormField } from "@/components/text-form-field";
 import { SelectFormField } from "@/components/select-form-field";
 import { LoadingSpinner } from "@/components/loading-spinner";
+import { BackButton } from "@/components/back-button";
 import { getErrorMessage } from "@/lib/get-error-message";
 import { createVehicle } from "@/services/vehicle-service";
 import { uploadImage } from "@/services/image-service";
@@ -72,7 +73,8 @@ export default function NewVehiclePage() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-md p-6">
+    <div className="mx-auto flex w-full max-w-md flex-col gap-4 p-6">
+      <BackButton />
       <Card>
         <CardHeader>
           <CardTitle>Add Vehicle</CardTitle>

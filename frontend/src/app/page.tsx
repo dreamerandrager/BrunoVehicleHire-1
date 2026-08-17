@@ -24,6 +24,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { LoadingSpinner } from "@/components/loading-spinner";
+import { TableImage } from "@/components/table-image";
+import { Modal } from "@/components/modal";
+import { VehicleView } from "@/components/vehicle-view";
+import { EditVehicleForm } from "@/components/edit-vehicle-form";
 import { getErrorMessage } from "@/lib/get-error-message";
 import { getVehiclesPaged, softDeleteVehicle } from "@/services/vehicle-service";
 import { PagedResult } from "@/types/paged-result";
@@ -36,6 +40,9 @@ export default function HomePage() {
   const [data, setData] = useState<PagedResult<Vehicle> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [viewingVehicle, setViewingVehicle] = useState<Vehicle | null>(null);
+  const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null);
 
   const loadVehicles = useCallback(async () => {
     setIsLoading(true);
@@ -86,6 +93,7 @@ export default function HomePage() {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>Image</TableHead>
                 <TableHead>Registration</TableHead>
                 <TableHead>Type</TableHead>
                 <TableHead>Make</TableHead>
@@ -99,13 +107,20 @@ export default function HomePage() {
             <TableBody>
               {data.items.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center text-muted-foreground">
+                  <TableCell colSpan={9} className="text-center text-muted-foreground">
                     No vehicles found.
                   </TableCell>
                 </TableRow>
               )}
               {data.items.map((vehicle) => (
-                <TableRow key={vehicle.id}>
+                <TableRow
+                  key={vehicle.id}
+                  className="cursor-pointer"
+                  onClick={() => setViewingVehicle(vehicle)}
+                >
+                  <TableCell>
+                    <TableImage src={vehicle.imageUrls[0]} alt={vehicle.registrationNumber} />
+                  </TableCell>
                   <TableCell>{vehicle.registrationNumber}</TableCell>
                   <TableCell>{VEHICLE_TYPES[vehicle.vehicleType]}</TableCell>
                   <TableCell>{vehicle.make}</TableCell>
@@ -113,13 +128,8 @@ export default function HomePage() {
                   <TableCell>{vehicle.year}</TableCell>
                   <TableCell>{VEHICLE_COLOURS[vehicle.colour]}</TableCell>
                   <TableCell>R{vehicle.pricePerDay.toFixed(2)}</TableCell>
-                  <TableCell className="flex justify-end gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      render={<Link href={`/vehicles/${vehicle.registrationNumber}/edit`} />}
-                      nativeButton={false}
-                    >
+                  <TableCell className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                    <Button variant="outline" size="sm" onClick={() => setEditingVehicle(vehicle)}>
                       Edit
                     </Button>
                     <AlertDialog>
@@ -171,6 +181,25 @@ export default function HomePage() {
             </div>
           </div>
         </>
+      )}
+
+      {viewingVehicle && (
+        <Modal open onOpenChange={(open) => !open && setViewingVehicle(null)} title="Vehicle Details">
+          <VehicleView vehicle={viewingVehicle} />
+        </Modal>
+      )}
+
+      {editingVehicle && (
+        <Modal open onOpenChange={(open) => !open && setEditingVehicle(null)} title="Edit Vehicle">
+          <VehicleView vehicle={editingVehicle} />
+          <EditVehicleForm
+            vehicle={editingVehicle}
+            onSuccess={() => {
+              setEditingVehicle(null);
+              loadVehicles();
+            }}
+          />
+        </Modal>
       )}
     </div>
   );
