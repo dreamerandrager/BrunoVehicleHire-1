@@ -20,8 +20,8 @@
 - [x] MediatR (or equivalent) wired
 - [x] FluentValidation (or similar) wired
 - [x] Repository pattern implemented
-- [ ] Functional rules implemented: Create, Update, Get by RegistrationNumber, Paginated list, Soft delete — Create, Get by RegistrationNumber, Update done; Paginated list, Soft delete still missing
-- [ ] REST API — proper HTTP verbs + status codes — POST->201, GET->200/404, PUT->200/400/404 all established; still need DELETE and the paginated GET
+- [ ] Functional rules implemented: Create, Update, Get by RegistrationNumber, Paginated list, Soft delete — only Soft delete still missing
+- [ ] REST API — proper HTTP verbs + status codes — POST->201, GET->200/404, PUT->200/400/404 all established; still need DELETE
 - [x] API Key security (header-based)
 - [x] Swagger enabled
 - [x] No business logic in controllers

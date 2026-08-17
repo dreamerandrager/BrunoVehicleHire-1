@@ -1,7 +1,9 @@
+using BrunoVehicleHire.Application.Common.Models;
 using BrunoVehicleHire.Application.Vehicles.Commands.CreateVehicle;
 using BrunoVehicleHire.Application.Vehicles.Commands.UpdateVehicle;
 using BrunoVehicleHire.Application.Vehicles.Dtos;
 using BrunoVehicleHire.Application.Vehicles.Queries.GetVehicleByRegistrationNumber;
+using BrunoVehicleHire.Application.Vehicles.Queries.GetVehiclesPaged;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,6 +27,16 @@ public class VehiclesController : ControllerBase
     {
         var vehicle = await _mediator.Send(command, cancellationToken);
         return Created($"/api/vehicles/{vehicle.Id}", vehicle);
+    }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(PagedResult<VehicleDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<PagedResult<VehicleDto>>> GetPaged([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default)
+    {
+        var result = await _mediator.Send(new GetVehiclesPagedQuery(pageNumber, pageSize), cancellationToken);
+
+        return Ok(result);
     }
 
     [HttpGet("{registrationNumber}")]
