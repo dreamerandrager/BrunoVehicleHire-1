@@ -1,35 +1,9 @@
 import { TableImage } from "@/components/table-image";
-import { cn } from "@/lib/utils";
+import { DetailRow } from "@/components/detail-row";
+import { ConditionBadge } from "@/components/condition-badge";
 import { VEHICLE_COLOURS } from "@/constants/vehicle-colours";
-import { VEHICLE_CONDITIONS } from "@/constants/vehicle-conditions";
-import { VEHICLE_CONDITION_STYLES } from "@/constants/vehicle-condition-styles";
 import { VEHICLE_TYPES } from "@/constants/vehicle-types";
 import { Vehicle } from "@/types/vehicle";
-
-function DetailRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex justify-between gap-4 py-1.5 text-sm">
-      <span className="text-muted-foreground">{label}</span>
-      <span className="font-medium">{value}</span>
-    </div>
-  );
-}
-
-function ConditionBadge({ condition }: { condition: number }) {
-  return (
-    <div className="flex justify-between gap-4 py-1.5 text-sm">
-      <span className="text-muted-foreground">Condition</span>
-      <span
-        className={cn(
-          "rounded-full px-2.5 py-0.5 text-xs font-medium",
-          VEHICLE_CONDITION_STYLES[condition]
-        )}
-      >
-        {VEHICLE_CONDITIONS[condition]}
-      </span>
-    </div>
-  );
-}
 
 export function VehicleView({ vehicle }: { vehicle: Vehicle }) {
   return (

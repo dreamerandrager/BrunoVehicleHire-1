@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { TableImage } from "@/components/table-image";
+import { ConditionPill } from "@/components/condition-pill";
 import { Modal } from "@/components/modal";
 import { VehicleView } from "@/components/vehicle-view";
 import { EditVehicleForm } from "@/components/edit-vehicle-form";
@@ -101,13 +102,14 @@ export default function HomePage() {
                 <TableHead>Year</TableHead>
                 <TableHead>Colour</TableHead>
                 <TableHead>Price/Day</TableHead>
+                <TableHead>Condition</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {data.items.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={9} className="text-center text-muted-foreground">
+                  <TableCell colSpan={10} className="text-center text-muted-foreground">
                     No vehicles found.
                   </TableCell>
                 </TableRow>
@@ -128,6 +130,9 @@ export default function HomePage() {
                   <TableCell>{vehicle.year}</TableCell>
                   <TableCell>{VEHICLE_COLOURS[vehicle.colour]}</TableCell>
                   <TableCell>R{vehicle.pricePerDay.toFixed(2)}</TableCell>
+                  <TableCell>
+                    <ConditionPill condition={vehicle.condition} />
+                  </TableCell>
                   <TableCell className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
                     <Button variant="outline" size="sm" onClick={() => setEditingVehicle(vehicle)}>
                       Edit

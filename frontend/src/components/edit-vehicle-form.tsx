@@ -17,6 +17,7 @@ import { updateVehicle } from "@/services/vehicle-service";
 import { uploadImage } from "@/services/image-service";
 import { updateVehicleSchema } from "@/schemas/update-vehicle-schema";
 import { VEHICLE_COLOURS } from "@/constants/vehicle-colours";
+import { VEHICLE_CONDITIONS } from "@/constants/vehicle-conditions";
 import { VEHICLE_TYPES } from "@/constants/vehicle-types";
 import { Vehicle } from "@/types/vehicle";
 
@@ -37,6 +38,7 @@ export function EditVehicleForm({ vehicle, onSuccess }: { vehicle: Vehicle; onSu
       colour: vehicle.colour,
       ownerName: vehicle.ownerName,
       pricePerDay: vehicle.pricePerDay,
+      condition: vehicle.condition,
     },
   });
 
@@ -59,7 +61,6 @@ export function EditVehicleForm({ vehicle, onSuccess }: { vehicle: Vehicle; onSu
     try {
       await updateVehicle(vehicle.id, {
         ...values,
-        condition: vehicle.condition, // no condition input control yet - preserve existing value on update
         imageUrls: imageUrl ? [imageUrl] : [],
       });
       toast.success("Vehicle updated.");
@@ -95,6 +96,7 @@ export function EditVehicleForm({ vehicle, onSuccess }: { vehicle: Vehicle; onSu
           <SelectFormField name="colour" control={form.control} label="Colour" options={VEHICLE_COLOURS} />
           <TextFormField name="ownerName" control={form.control} label="Owner Name" />
           <TextFormField name="pricePerDay" control={form.control} label="Price Per Day" type="number" step="0.01" />
+          <SelectFormField name="condition" control={form.control} label="Condition" options={VEHICLE_CONDITIONS} />
         </div>
 
         <Button type="submit" disabled={form.formState.isSubmitting}>
