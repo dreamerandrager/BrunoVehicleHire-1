@@ -13,6 +13,5 @@ public record UpdateVehicleCommand(
     VehicleColour Colour,
     string OwnerName,
     decimal PricePerDay,
-    DateTime? HireStartDate,
-    DateTime? HireEndDate
+    VehicleCondition Condition
 ) : IRequest<VehicleDto>;

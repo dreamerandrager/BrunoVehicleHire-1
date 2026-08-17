@@ -1,5 +1,6 @@
 import { TableImage } from "@/components/table-image";
 import { VEHICLE_COLOURS } from "@/constants/vehicle-colours";
+import { VEHICLE_CONDITIONS } from "@/constants/vehicle-conditions";
 import { VEHICLE_TYPES } from "@/constants/vehicle-types";
 import { Vehicle } from "@/types/vehicle";
 
@@ -30,12 +31,7 @@ export function VehicleView({ vehicle }: { vehicle: Vehicle }) {
         <DetailRow label="Colour" value={VEHICLE_COLOURS[vehicle.colour]} />
         <DetailRow label="Owner" value={vehicle.ownerName} />
         <DetailRow label="Price Per Day" value={`R${vehicle.pricePerDay.toFixed(2)}`} />
-        {vehicle.hireStartDate && (
-          <DetailRow label="Hire Start" value={new Date(vehicle.hireStartDate).toLocaleDateString()} />
-        )}
-        {vehicle.hireEndDate && (
-          <DetailRow label="Hire End" value={new Date(vehicle.hireEndDate).toLocaleDateString()} />
-        )}
+        <DetailRow label="Condition" value={VEHICLE_CONDITIONS[vehicle.condition]} />
         <DetailRow label="Added" value={new Date(vehicle.createdDate).toLocaleDateString()} />
       </div>
     </div>

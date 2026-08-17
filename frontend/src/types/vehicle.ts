@@ -8,8 +8,7 @@ export type Vehicle = {
   colour: number;
   ownerName: string;
   pricePerDay: number;
-  hireStartDate: string | null;
-  hireEndDate: string | null;
+  condition: number;
   imageUrls: string[];
   createdDate: string;
 };

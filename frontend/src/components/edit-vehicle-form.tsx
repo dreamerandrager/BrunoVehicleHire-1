@@ -36,8 +36,7 @@ export function EditVehicleForm({ vehicle, onSuccess }: { vehicle: Vehicle; onSu
     try {
       await updateVehicle(vehicle.id, {
         ...values,
-        hireStartDate: vehicle.hireStartDate,
-        hireEndDate: vehicle.hireEndDate,
+        condition: vehicle.condition, // no condition input control yet - preserve existing value on update
       });
       toast.success("Vehicle updated.");
       onSuccess();

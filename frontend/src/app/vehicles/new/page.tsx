@@ -61,8 +61,7 @@ export default function NewVehiclePage() {
     try {
       await createVehicle({
         ...values,
-        hireStartDate: null,
-        hireEndDate: null,
+        condition: 0, // TODO: no condition input control yet - defaults to Poor until the UI is designed
         imageUrls: imageUrl ? [imageUrl] : [],
       });
       toast.success("Vehicle created.");

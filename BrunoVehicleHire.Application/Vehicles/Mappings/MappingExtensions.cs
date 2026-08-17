@@ -16,8 +16,7 @@ public static class MappingExtensions
         Colour = vehicle.Colour,
         OwnerName = vehicle.OwnerName,
         PricePerDay = vehicle.PricePerDay,
-        HireStartDate = vehicle.HireStartDate,
-        HireEndDate = vehicle.HireEndDate,
+        Condition = vehicle.Condition,
         ImageUrls = vehicle.ImageUrls,
         CreatedDate = vehicle.CreatedDate
     };

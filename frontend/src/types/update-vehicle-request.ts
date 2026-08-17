@@ -6,6 +6,5 @@ export type UpdateVehicleRequest = {
   colour: number;
   ownerName: string;
   pricePerDay: number;
-  hireStartDate: string | null;
-  hireEndDate: string | null;
+  condition: number;
 };

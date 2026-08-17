@@ -13,8 +13,7 @@ public class VehicleDto
     public VehicleColour Colour { get; set; }
     public string OwnerName { get; set; } = string.Empty;
     public decimal PricePerDay { get; set; }
-    public DateTime? HireStartDate { get; set; }
-    public DateTime? HireEndDate { get; set; }
+    public VehicleCondition Condition { get; set; }
     public List<string> ImageUrls { get; set; } = new();
     public DateTime CreatedDate { get; set; }
 }

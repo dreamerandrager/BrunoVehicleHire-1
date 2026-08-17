@@ -26,8 +26,7 @@ public class CreateVehicleCommandHandler : IRequestHandler<CreateVehicleCommand,
             request.Colour,
             request.OwnerName,
             request.PricePerDay,
-            request.HireStartDate,
-            request.HireEndDate,
+            request.Condition,
             request.ImageUrls);
 
         await _vehicleRepository.AddAsync(vehicle, cancellationToken);

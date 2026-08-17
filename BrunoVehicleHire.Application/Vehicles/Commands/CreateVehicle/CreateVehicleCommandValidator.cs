@@ -24,10 +24,7 @@ public class CreateVehicleCommandValidator : AbstractValidator<CreateVehicleComm
         RuleFor(x => x.PricePerDay).GreaterThan(0);
         RuleFor(x => x.VehicleType).IsInEnum();
         RuleFor(x => x.Colour).IsInEnum();
-
-        RuleFor(x => x)
-            .Must(x => !x.HireStartDate.HasValue || !x.HireEndDate.HasValue || x.HireEndDate > x.HireStartDate)
-            .WithMessage("Hire end date must be after hire start date.");
+        RuleFor(x => x.Condition).IsInEnum();
     }
 
     private async Task<bool> BeUniqueRegistrationNumber(string registrationNumber, CancellationToken cancellationToken)

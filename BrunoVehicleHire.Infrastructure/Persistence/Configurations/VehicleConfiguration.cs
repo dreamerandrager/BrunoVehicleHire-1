@@ -40,6 +40,9 @@ public class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
         builder.Property(v => v.Colour)
             .HasConversion<int>();
 
+        builder.Property(v => v.Condition)
+            .HasConversion<int>();
+
         builder.HasQueryFilter(v => !v.IsDeleted);
     }
 }

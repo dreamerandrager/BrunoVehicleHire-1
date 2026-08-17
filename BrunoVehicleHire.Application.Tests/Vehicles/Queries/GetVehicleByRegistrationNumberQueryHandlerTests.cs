@@ -12,7 +12,7 @@ public class GetVehicleByRegistrationNumberQueryHandlerTests
     [Fact]
     public async Task Handle_VehicleExists_ReturnsDto()
     {
-        var vehicle = new Vehicle("CA123456", VehicleType.Car, "Toyota", "Corolla", 2022, VehicleColour.Blue, "Bruno Motors", 450m, null, null);
+        var vehicle = new Vehicle("CA123456", VehicleType.Car, "Toyota", "Corolla", 2022, VehicleColour.Blue, "Bruno Motors", 450m, VehicleCondition.Good);
 
         var repository = new Mock<IVehicleRepository>();
         repository.Setup(r => r.GetByRegistrationNumberAsync("CA123456", It.IsAny<CancellationToken>()))

@@ -23,8 +23,7 @@ public class CreateVehicleCommandHandlerTests
             VehicleColour.Blue,
             "Bruno Motors",
             450m,
-            null,
-            null,
+            VehicleCondition.Good,
             null);
 
         var result = await handler.Handle(command, CancellationToken.None);

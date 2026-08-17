@@ -13,7 +13,6 @@ public record CreateVehicleCommand(
     VehicleColour Colour,
     string OwnerName,
     decimal PricePerDay,
-    DateTime? HireStartDate,
-    DateTime? HireEndDate,
+    VehicleCondition Condition,
     List<string>? ImageUrls
 ) : IRequest<VehicleDto>;

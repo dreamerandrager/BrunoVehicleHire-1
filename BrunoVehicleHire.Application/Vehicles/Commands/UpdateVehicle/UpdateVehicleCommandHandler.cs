@@ -28,8 +28,7 @@ public class UpdateVehicleCommandHandler : IRequestHandler<UpdateVehicleCommand,
             request.Colour,
             request.OwnerName,
             request.PricePerDay,
-            request.HireStartDate,
-            request.HireEndDate);
+            request.Condition);
 
         await _vehicleRepository.SaveChangesAsync(cancellationToken);
 

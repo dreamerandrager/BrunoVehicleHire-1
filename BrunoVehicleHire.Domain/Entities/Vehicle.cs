@@ -11,15 +11,14 @@ public class Vehicle
     public VehicleColour Colour { get; private set; }
     public string OwnerName { get; private set; } = string.Empty;
     public decimal PricePerDay { get; private set; }
-    public DateTime? HireStartDate { get; private set; }
-    public DateTime? HireEndDate { get; private set; }
+    public VehicleCondition Condition { get; private set; }
     public List<string> ImageUrls { get; private set; } = new();
     public bool IsDeleted { get; private set; }
     public DateTime CreatedDate { get; private set; }
 
     private Vehicle() { }
 
-    public Vehicle(string registrationNumber, VehicleType vehicleType, string make, string model, int year, VehicleColour colour, string ownerName, decimal pricePerDay, DateTime? hireStartDate, DateTime? hireEndDate, List<string>? imageUrls = null)
+    public Vehicle(string registrationNumber, VehicleType vehicleType, string make, string model, int year, VehicleColour colour, string ownerName, decimal pricePerDay, VehicleCondition condition, List<string>? imageUrls = null)
     {
         Id = Guid.NewGuid();
         RegistrationNumber = registrationNumber;
@@ -30,14 +29,13 @@ public class Vehicle
         Colour = colour;
         OwnerName = ownerName;
         PricePerDay = pricePerDay;
-        HireStartDate = hireStartDate;
-        HireEndDate = hireEndDate;
+        Condition = condition;
         ImageUrls = imageUrls ?? new List<string>();
         IsDeleted = false;
         CreatedDate = DateTime.UtcNow;
     }
 
-    public void Update(VehicleType vehicleType, string make, string model, int year, VehicleColour colour, string ownerName, decimal pricePerDay, DateTime? hireStartDate, DateTime? hireEndDate, List<string>? imageUrls = null)
+    public void Update(VehicleType vehicleType, string make, string model, int year, VehicleColour colour, string ownerName, decimal pricePerDay, VehicleCondition condition, List<string>? imageUrls = null)
     {
         VehicleType = vehicleType;
         Make = make;
@@ -46,8 +44,7 @@ public class Vehicle
         Colour = colour;
         OwnerName = ownerName;
         PricePerDay = pricePerDay;
-        HireStartDate = hireStartDate;
-        HireEndDate = hireEndDate;
+        Condition = condition;
         ImageUrls = imageUrls ?? ImageUrls;
     }
 
