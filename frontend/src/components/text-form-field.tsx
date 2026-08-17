@@ -31,7 +31,7 @@ export function TextFormField<T extends FieldValues>({
             name={field.name}
             type={type}
             step={step}
-            value={field.value}
+            value={type === "number" && Number.isNaN(field.value) ? "" : field.value}
             onChange={(e) => field.onChange(type === "number" ? e.target.valueAsNumber : e.target.value)}
             onBlur={field.onBlur}
             ref={field.ref}
