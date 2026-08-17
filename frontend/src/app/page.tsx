@@ -157,11 +157,12 @@ export default function HomePage() {
             </TableBody>
           </Table>
 
-          <div className="flex items-center justify-between">
+          <div className="grid grid-cols-3 items-center">
             <p className="text-sm text-muted-foreground">
-              Page {data.pageNumber} of {totalPages} ({data.totalCount} total)
+              Page {data.pageNumber} of {totalPages}
             </p>
-            <div className="flex gap-2">
+            <p className="text-center text-sm text-muted-foreground">{data.totalCount} items</p>
+            <div className="flex justify-end gap-2">
               <Button
                 variant="outline"
                 size="sm"
@@ -184,21 +185,33 @@ export default function HomePage() {
       )}
 
       {viewingVehicle && (
-        <Modal open onOpenChange={(open) => !open && setViewingVehicle(null)} title="Vehicle Details">
+        <Modal
+          open
+          onOpenChange={(open) => !open && setViewingVehicle(null)}
+          title="Vehicle Details"
+          className="sm:max-w-2xl"
+        >
           <VehicleView vehicle={viewingVehicle} />
         </Modal>
       )}
 
       {editingVehicle && (
-        <Modal open onOpenChange={(open) => !open && setEditingVehicle(null)} title="Edit Vehicle">
-          <VehicleView vehicle={editingVehicle} />
-          <EditVehicleForm
-            vehicle={editingVehicle}
-            onSuccess={() => {
-              setEditingVehicle(null);
-              loadVehicles();
-            }}
-          />
+        <Modal
+          open
+          onOpenChange={(open) => !open && setEditingVehicle(null)}
+          title="Edit Vehicle"
+          className="sm:max-w-4xl"
+        >
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <VehicleView vehicle={editingVehicle} />
+            <EditVehicleForm
+              vehicle={editingVehicle}
+              onSuccess={() => {
+                setEditingVehicle(null);
+                loadVehicles();
+              }}
+            />
+          </div>
         </Modal>
       )}
     </div>

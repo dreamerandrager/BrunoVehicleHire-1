@@ -1,4 +1,4 @@
-import { ImageIcon } from "lucide-react";
+import { TableImage } from "@/components/table-image";
 import { VEHICLE_COLOURS } from "@/constants/vehicle-colours";
 import { VEHICLE_TYPES } from "@/constants/vehicle-types";
 import { Vehicle } from "@/types/vehicle";
@@ -13,22 +13,13 @@ function DetailRow({ label, value }: { label: string; value: string }) {
 }
 
 export function VehicleView({ vehicle }: { vehicle: Vehicle }) {
-  const imageUrl = vehicle.imageUrls[0];
-
   return (
     <div className="flex flex-col gap-4">
-      {imageUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={imageUrl}
-          alt={vehicle.registrationNumber}
-          className="h-48 w-full rounded-lg object-cover"
-        />
-      ) : (
-        <div className="flex h-48 w-full items-center justify-center rounded-lg bg-muted">
-          <ImageIcon className="size-10 text-muted-foreground" />
-        </div>
-      )}
+      <TableImage
+        src={vehicle.imageUrls[0]}
+        alt={vehicle.registrationNumber}
+        className="h-64 w-full rounded-lg"
+      />
 
       <div className="flex flex-col divide-y">
         <DetailRow label="Registration Number" value={vehicle.registrationNumber} />

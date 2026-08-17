@@ -1,16 +1,28 @@
-import { ImageIcon } from "lucide-react";
+"use client";
 
-export function TableImage({ src, alt }: { src?: string; alt: string }) {
-  if (!src) {
+import { useState } from "react";
+import { ImageIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+type TableImageProps = {
+  src?: string;
+  alt: string;
+  className?: string;
+};
+
+export function TableImage({ src, alt, className = "size-10 rounded" }: TableImageProps) {
+  const [failed, setFailed] = useState(false);
+
+  if (!src || failed) {
     return (
-      <div className="flex size-10 items-center justify-center rounded bg-muted">
-        <ImageIcon className="size-4 text-muted-foreground" />
+      <div className={cn("flex items-center justify-center bg-muted", className)}>
+        <ImageIcon className="size-1/3 text-muted-foreground" />
       </div>
     );
   }
 
   return (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt={alt} className="size-10 rounded object-cover" />
+    <img src={src} alt={alt} className={cn("object-cover", className)} onError={() => setFailed(true)} />
   );
 }
