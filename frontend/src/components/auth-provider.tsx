@@ -3,7 +3,6 @@
 import { useEffect, useState, ReactNode } from "react";
 import { AuthContext } from "@/contexts/auth-context";
 import { clearApiKey, getApiKey, setApiKey } from "@/services/auth-service";
-import { ApiError } from "@/lib/api-error";
 import { getVehiclesPaged } from "@/services/vehicle-service";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -23,18 +22,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .finally(() => setIsChecking(false));
   }, []);
 
-  async function authorize(apiKey: string): Promise<boolean> {
+  async function authorize(apiKey: string): Promise<void> {
     setApiKey(apiKey);
 
     try {
       await getVehiclesPaged(1, 1);
       setIsAuthorized(true);
-      return true;
     } catch (error) {
       clearApiKey();
-      if (error instanceof ApiError && error.status === 401) {
-        return false;
-      }
       throw error;
     }
   }

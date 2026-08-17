@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TextFormField } from "@/components/text-form-field";
 import { SelectFormField } from "@/components/select-form-field";
 import { LoadingSpinner } from "@/components/loading-spinner";
+import { getErrorMessage } from "@/lib/get-error-message";
 import { getVehicleByRegistrationNumber, updateVehicle } from "@/services/vehicle-service";
 import { updateVehicleSchema } from "@/schemas/update-vehicle-schema";
 import { VEHICLE_COLOURS } from "@/constants/vehicle-colours";
@@ -44,7 +45,7 @@ export default function EditVehiclePage() {
           pricePerDay: data.pricePerDay,
         });
       })
-      .catch(() => setError("Vehicle not found."))
+      .catch((error) => setError(getErrorMessage(error, "Vehicle not found.")))
       .finally(() => setIsLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [registrationNumber]);
@@ -60,8 +61,8 @@ export default function EditVehiclePage() {
       });
       toast.success("Vehicle updated.");
       router.push("/");
-    } catch {
-      toast.error("Failed to update vehicle.");
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Failed to update vehicle."));
     }
   }
 

@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TextFormField } from "@/components/text-form-field";
 import { SelectFormField } from "@/components/select-form-field";
 import { LoadingSpinner } from "@/components/loading-spinner";
+import { getErrorMessage } from "@/lib/get-error-message";
 import { createVehicle } from "@/services/vehicle-service";
 import { uploadImage } from "@/services/image-service";
 import { createVehicleSchema } from "@/schemas/create-vehicle-schema";
@@ -48,8 +49,8 @@ export default function NewVehiclePage() {
     try {
       const { url } = await uploadImage(file);
       setImageUrl(url);
-    } catch {
-      toast.error("Image upload failed.");
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Image upload failed."));
     } finally {
       setImageUploading(false);
     }
@@ -65,8 +66,8 @@ export default function NewVehiclePage() {
       });
       toast.success("Vehicle created.");
       router.push("/");
-    } catch {
-      toast.error("Failed to create vehicle.");
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Failed to create vehicle."));
     }
   }
 

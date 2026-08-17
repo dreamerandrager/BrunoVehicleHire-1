@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
+import { getErrorMessage } from "@/lib/get-error-message";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,13 +26,13 @@ export function AuthorizeForm() {
     setIsSubmitting(true);
     setError(null);
 
-    const success = await authorize(apiKey);
-
-    if (!success) {
-      setError("Invalid API key.");
+    try {
+      await authorize(apiKey);
+    } catch (error) {
+      setError(getErrorMessage(error, "Something went wrong. Please try again."));
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setIsSubmitting(false);
   }
 
   return (

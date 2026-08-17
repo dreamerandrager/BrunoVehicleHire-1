@@ -24,6 +24,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { LoadingSpinner } from "@/components/loading-spinner";
+import { getErrorMessage } from "@/lib/get-error-message";
 import { getVehiclesPaged, softDeleteVehicle } from "@/services/vehicle-service";
 import { PagedResult } from "@/types/paged-result";
 import { Vehicle } from "@/types/vehicle";
@@ -42,8 +43,8 @@ export default function HomePage() {
 
     try {
       setData(await getVehiclesPaged(pageNumber));
-    } catch {
-      setError("Failed to load vehicles.");
+    } catch (error) {
+      setError(getErrorMessage(error, "Failed to load vehicles."));
     } finally {
       setIsLoading(false);
     }
@@ -59,8 +60,8 @@ export default function HomePage() {
       await softDeleteVehicle(id);
       toast.success("Vehicle deleted.");
       loadVehicles();
-    } catch {
-      toast.error("Failed to delete vehicle.");
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Failed to delete vehicle."));
     }
   }
 
