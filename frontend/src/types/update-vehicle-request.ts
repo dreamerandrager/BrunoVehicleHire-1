@@ -4,7 +4,7 @@ export type UpdateVehicleRequest = {
   model: string;
   year: number;
   colour: number;
-  sellerName: string;
+  ownerName: string;
   pricePerDay: number;
   hireStartDate: string | null;
   hireEndDate: string | null;

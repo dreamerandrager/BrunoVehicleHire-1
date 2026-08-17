@@ -26,7 +26,7 @@ public class UpdateVehicleCommandHandler : IRequestHandler<UpdateVehicleCommand,
             request.Model,
             request.Year,
             request.Colour,
-            request.SellerName,
+            request.OwnerName,
             request.PricePerDay,
             request.HireStartDate,
             request.HireEndDate);

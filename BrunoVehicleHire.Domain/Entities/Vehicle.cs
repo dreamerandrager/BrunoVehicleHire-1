@@ -9,7 +9,7 @@ public class Vehicle
     public string Model { get; private set; } = string.Empty;
     public int Year { get; private set; }
     public VehicleColour Colour { get; private set; }
-    public string SellerName { get; private set; } = string.Empty;
+    public string OwnerName { get; private set; } = string.Empty;
     public decimal PricePerDay { get; private set; }
     public DateTime? HireStartDate { get; private set; }
     public DateTime? HireEndDate { get; private set; }
@@ -19,7 +19,7 @@ public class Vehicle
 
     private Vehicle() { }
 
-    public Vehicle(string registrationNumber, VehicleType vehicleType, string make, string model, int year, VehicleColour colour, string sellerName, decimal pricePerDay, DateTime? hireStartDate, DateTime? hireEndDate, List<string>? imageUrls = null)
+    public Vehicle(string registrationNumber, VehicleType vehicleType, string make, string model, int year, VehicleColour colour, string ownerName, decimal pricePerDay, DateTime? hireStartDate, DateTime? hireEndDate, List<string>? imageUrls = null)
     {
         Id = Guid.NewGuid();
         RegistrationNumber = registrationNumber;
@@ -28,7 +28,7 @@ public class Vehicle
         Model = model;
         Year = year;
         Colour = colour;
-        SellerName = sellerName;
+        OwnerName = ownerName;
         PricePerDay = pricePerDay;
         HireStartDate = hireStartDate;
         HireEndDate = hireEndDate;
@@ -37,14 +37,14 @@ public class Vehicle
         CreatedDate = DateTime.UtcNow;
     }
 
-    public void Update(VehicleType vehicleType, string make, string model, int year, VehicleColour colour, string sellerName, decimal pricePerDay, DateTime? hireStartDate, DateTime? hireEndDate, List<string>? imageUrls = null)
+    public void Update(VehicleType vehicleType, string make, string model, int year, VehicleColour colour, string ownerName, decimal pricePerDay, DateTime? hireStartDate, DateTime? hireEndDate, List<string>? imageUrls = null)
     {
         VehicleType = vehicleType;
         Make = make;
         Model = model;
         Year = year;
         Colour = colour;
-        SellerName = sellerName;
+        OwnerName = ownerName;
         PricePerDay = pricePerDay;
         HireStartDate = hireStartDate;
         HireEndDate = hireEndDate;

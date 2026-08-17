@@ -11,7 +11,7 @@ public record CreateVehicleCommand(
     string Model,
     int Year,
     VehicleColour Colour,
-    string SellerName,
+    string OwnerName,
     decimal PricePerDay,
     DateTime? HireStartDate,
     DateTime? HireEndDate,

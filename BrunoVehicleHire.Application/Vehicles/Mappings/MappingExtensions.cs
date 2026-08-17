@@ -14,7 +14,7 @@ public static class MappingExtensions
         Model = vehicle.Model,
         Year = vehicle.Year,
         Colour = vehicle.Colour,
-        SellerName = vehicle.SellerName,
+        OwnerName = vehicle.OwnerName,
         PricePerDay = vehicle.PricePerDay,
         HireStartDate = vehicle.HireStartDate,
         HireEndDate = vehicle.HireEndDate,

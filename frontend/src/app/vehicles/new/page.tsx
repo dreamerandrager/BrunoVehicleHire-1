@@ -37,7 +37,7 @@ export default function NewVehiclePage() {
       model: "",
       year: new Date().getFullYear(),
       colour: 0,
-      sellerName: "",
+      ownerName: "",
       pricePerDay: 0,
     },
   });
@@ -88,7 +88,7 @@ export default function NewVehiclePage() {
               <TextFormField name="model" control={form.control} label="Model" />
               <TextFormField name="year" control={form.control} label="Year" type="number" />
               <SelectFormField name="colour" control={form.control} label="Colour" options={VEHICLE_COLOURS} />
-              <TextFormField name="sellerName" control={form.control} label="Seller Name" />
+              <TextFormField name="ownerName" control={form.control} label="Owner Name" />
               <TextFormField name="pricePerDay" control={form.control} label="Price Per Day" type="number" step="0.01" />
 
               <Field>

@@ -27,7 +27,7 @@ public class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
             .IsRequired()
             .HasMaxLength(50);
 
-        builder.Property(v => v.SellerName)
+        builder.Property(v => v.OwnerName)
             .IsRequired()
             .HasMaxLength(100);
 

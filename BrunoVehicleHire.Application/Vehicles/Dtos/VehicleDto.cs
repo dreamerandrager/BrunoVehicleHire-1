@@ -11,7 +11,7 @@ public class VehicleDto
     public string Model { get; set; } = string.Empty;
     public int Year { get; set; }
     public VehicleColour Colour { get; set; }
-    public string SellerName { get; set; } = string.Empty;
+    public string OwnerName { get; set; } = string.Empty;
     public decimal PricePerDay { get; set; }
     public DateTime? HireStartDate { get; set; }
     public DateTime? HireEndDate { get; set; }

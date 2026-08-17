@@ -10,7 +10,7 @@ public class UpdateVehicleCommandValidator : AbstractValidator<UpdateVehicleComm
         RuleFor(x => x.Make).NotEmpty().MaximumLength(50);
         RuleFor(x => x.Model).NotEmpty().MaximumLength(50);
         RuleFor(x => x.Year).InclusiveBetween(1900, DateTime.UtcNow.Year + 1);
-        RuleFor(x => x.SellerName).NotEmpty().MaximumLength(100);
+        RuleFor(x => x.OwnerName).NotEmpty().MaximumLength(100);
         RuleFor(x => x.PricePerDay).GreaterThan(0);
         RuleFor(x => x.VehicleType).IsInEnum();
         RuleFor(x => x.Colour).IsInEnum();

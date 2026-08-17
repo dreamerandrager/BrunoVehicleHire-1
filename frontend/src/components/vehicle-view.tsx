@@ -28,7 +28,7 @@ export function VehicleView({ vehicle }: { vehicle: Vehicle }) {
         <DetailRow label="Model" value={vehicle.model} />
         <DetailRow label="Year" value={String(vehicle.year)} />
         <DetailRow label="Colour" value={VEHICLE_COLOURS[vehicle.colour]} />
-        <DetailRow label="Seller" value={vehicle.sellerName} />
+        <DetailRow label="Owner" value={vehicle.ownerName} />
         <DetailRow label="Price Per Day" value={`R${vehicle.pricePerDay.toFixed(2)}`} />
         {vehicle.hireStartDate && (
           <DetailRow label="Hire Start" value={new Date(vehicle.hireStartDate).toLocaleDateString()} />
