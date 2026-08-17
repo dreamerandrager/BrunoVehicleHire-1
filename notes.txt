@@ -34,6 +34,9 @@ A: Up() applies the migration - the schema changes to move the DB forward (e.g. 
 Q: The validation failure is thrown inside the MediatR pipeline behavior, not the controller - how does that error actually reach the frontend as a response?
 A: Nothing in between catches it - the ValidationException just propagates up through every awaited caller (pipeline behavior -> MediatR.Send -> controller action -> MVC internals) until it hits ExceptionHandlingMiddleware, which wraps the entire rest of the pipeline in a try/catch (it's registered before MapControllers, so its "await _next(context)" covers routing + controller + MediatR + handler, all of it). That catch block is what actually sets the 400 status and writes the ValidationProblemDetails JSON to the real HTTP response. So the frontend just gets a normal HTTP 400 + JSON body like any other error - nothing special on its end.
 
+Q: How does Moq work briefly?
+A: Moq generates a fake in-memory implementation of an interface at runtime (no real DB/HTTP/etc behind it). new Mock<IVehicleRepository>() creates the fake; .Object is the actual instance passed into the handler's constructor same as DI would. .Setup(...) configures what a specific method call should return (anything not set up just returns a harmless default, doesn't throw). .Verify(...) asserts after the fact that a method was actually called, how many times, with what args - e.g. confirming AddAsync was called once. This only works because IVehicleRepository is an interface - Moq can't fake a concrete class's non-virtual members, which is part of why the repository is designed as an interface in the first place.
+
 Q: What is Swashbuckle?
 A: .NET library that auto-generates OpenAPI/Swagger docs from controllers/DTOs and serves the Swagger UI page. Satisfies the spec's "Swagger documentation enabled" requirement.
 
@@ -74,6 +77,14 @@ CORS
 Swagger wiring
 - Replaced the template's built-in AddOpenApi()/MapOpenApi() (just a raw OpenAPI JSON document, no browsable UI) with Swashbuckle: AddEndpointsApiExplorer() + AddSwaggerGen() in services, UseSwagger() + UseSwaggerUI() in the dev-only pipeline block. This is what actually gives a visual Swagger page at /swagger, satisfying the spec's "Swagger documentation enabled" requirement.
 - Wiring Program.cs alone isn't enough to actually see the UI when running from Visual Studio - Properties/launchSettings.json also needs "launchBrowser": true and "launchUrl": "swagger" on each profile (http/https), otherwise the app runs fine but no browser opens (or it opens to a blank/404 root page with no launchUrl set).
+
+Unit tests
+- BrunoVehicleHire.Application.Tests (xUnit + Moq), references Application only - mocks IVehicleRepository, no real DB/EF Core involved, proving the "handler can be unit tested without a real database" point from earlier. CreateVehicleCommandHandlerTests (1 test) + GetVehicleByRegistrationNumberQueryHandlerTests (2 tests: found, not-found -> NotFoundException).
+dotnet new xunit -n BrunoVehicleHire.Application.Tests
+dotnet sln add BrunoVehicleHire.Application.Tests
+dotnet add BrunoVehicleHire.Application.Tests reference BrunoVehicleHire.Application
+dotnet add BrunoVehicleHire.Application.Tests package Moq
+Verified with: dotnet test BrunoVehicleHire.Application.Tests
 
 Backend setup — commands run
 

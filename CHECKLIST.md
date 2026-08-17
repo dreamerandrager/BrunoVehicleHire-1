@@ -25,7 +25,7 @@
 - [x] API Key security (header-based)
 - [x] Swagger enabled
 - [x] No business logic in controllers
-- [ ] Unit tests: ≥1 Command, ≥1 Query — no test project exists yet at all
+- [x] Unit tests: ≥1 Command, ≥1 Query
 
 ### Checklist — Frontend (React)
 - [ ] Functional components + TypeScript
