@@ -1,10 +1,11 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { useAuth } from "@/components/auth-provider";
+import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { LoadingSpinner } from "@/components/loading-spinner";
 import {
   Card,
   CardContent,
@@ -54,6 +55,7 @@ export function AuthorizeForm() {
             </div>
             {error && <p className="text-sm text-destructive">{error}</p>}
             <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting && <LoadingSpinner />}
               {isSubmitting ? "Checking..." : "Continue"}
             </Button>
           </form>

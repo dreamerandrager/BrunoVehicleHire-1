@@ -23,10 +23,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { getVehiclesPaged, softDeleteVehicle } from "@/services/vehicle-service";
-import { PagedResult, Vehicle, VEHICLE_COLOURS, VEHICLE_TYPES } from "@/types/vehicle";
-
-const PAGE_SIZE = 10;
+import { LoadingSpinner } from "@/components/loading-spinner";
+import { getVehiclesPaged } from "@/services/vehicles/get-vehicles-paged";
+import { softDeleteVehicle } from "@/services/vehicles/soft-delete-vehicle";
+import { PagedResult } from "@/types/paged-result";
+import { Vehicle } from "@/types/vehicle";
+import { VEHICLE_COLOURS } from "@/constants/vehicle-colours";
+import { VEHICLE_TYPES } from "@/constants/vehicle-types";
 
 export default function HomePage() {
   const [pageNumber, setPageNumber] = useState(1);
@@ -39,7 +42,7 @@ export default function HomePage() {
     setError(null);
 
     try {
-      setData(await getVehiclesPaged(pageNumber, PAGE_SIZE));
+      setData(await getVehiclesPaged(pageNumber));
     } catch {
       setError("Failed to load vehicles.");
     } finally {
@@ -71,7 +74,11 @@ export default function HomePage() {
         <Button render={<Link href="/vehicles/new" />} nativeButton={false}>Add Vehicle</Button>
       </div>
 
-      {isLoading && <p className="text-sm text-muted-foreground">Loading...</p>}
+      {isLoading && (
+        <div className="flex justify-center py-8">
+          <LoadingSpinner className="size-6 text-muted-foreground" />
+        </div>
+      )}
       {error && <p className="text-sm text-destructive">{error}</p>}
 
       {!isLoading && !error && data && (

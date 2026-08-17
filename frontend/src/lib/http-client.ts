@@ -1,17 +1,7 @@
-import { getApiKey } from "@/lib/auth-storage";
+import { getApiKey } from "@/lib/auth-storage/get-api-key";
+import { ApiError } from "@/lib/api-error";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
-export class ApiError extends Error {
-  status: number;
-  fieldErrors?: Record<string, string[]>;
-
-  constructor(status: number, message: string, fieldErrors?: Record<string, string[]>) {
-    super(message);
-    this.status = status;
-    this.fieldErrors = fieldErrors;
-  }
-}
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const apiKey = getApiKey();

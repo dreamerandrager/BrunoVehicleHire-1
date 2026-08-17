@@ -11,20 +11,15 @@ import { FieldGroup } from "@/components/ui/field";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TextFormField } from "@/components/text-form-field";
 import { SelectFormField } from "@/components/select-form-field";
-import { getVehicleByRegistrationNumber, updateVehicle } from "@/services/vehicle-service";
-import { VEHICLE_COLOURS, VEHICLE_TYPES, Vehicle } from "@/types/vehicle";
+import { LoadingSpinner } from "@/components/loading-spinner";
+import { getVehicleByRegistrationNumber } from "@/services/vehicles/get-vehicle-by-registration-number";
+import { updateVehicle } from "@/services/vehicles/update-vehicle";
+import { updateVehicleSchema } from "@/schemas/update-vehicle-schema";
+import { VEHICLE_COLOURS } from "@/constants/vehicle-colours";
+import { VEHICLE_TYPES } from "@/constants/vehicle-types";
+import { Vehicle } from "@/types/vehicle";
 
-const schema = z.object({
-  vehicleType: z.number().int().min(0).max(VEHICLE_TYPES.length - 1),
-  make: z.string().min(1, "Required").max(50),
-  model: z.string().min(1, "Required").max(50),
-  year: z.number().int().min(1900).max(new Date().getFullYear() + 1),
-  colour: z.number().int().min(0).max(VEHICLE_COLOURS.length - 1),
-  sellerName: z.string().min(1, "Required").max(100),
-  pricePerDay: z.number().positive("Must be greater than 0"),
-});
-
-type FormValues = z.infer<typeof schema>;
+type FormValues = z.infer<typeof updateVehicleSchema>;
 
 export default function EditVehiclePage() {
   const router = useRouter();
@@ -34,7 +29,7 @@ export default function EditVehiclePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const form = useForm<FormValues>({ resolver: zodResolver(schema) });
+  const form = useForm<FormValues>({ resolver: zodResolver(updateVehicleSchema) });
 
   useEffect(() => {
     getVehicleByRegistrationNumber(registrationNumber)
@@ -72,7 +67,11 @@ export default function EditVehiclePage() {
   }
 
   if (isLoading) {
-    return <p className="p-6 text-sm text-muted-foreground">Loading...</p>;
+    return (
+      <div className="flex justify-center p-6">
+        <LoadingSpinner className="size-6 text-muted-foreground" />
+      </div>
+    );
   }
 
   if (error || !vehicle) {
@@ -97,6 +96,7 @@ export default function EditVehiclePage() {
               <TextFormField name="pricePerDay" control={form.control} label="Price Per Day" type="number" step="0.01" />
 
               <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting && <LoadingSpinner />}
                 {form.formState.isSubmitting ? "Saving..." : "Save Changes"}
               </Button>
             </FieldGroup>

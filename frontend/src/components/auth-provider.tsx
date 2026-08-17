@@ -1,18 +1,12 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { clearApiKey, getApiKey, setApiKey } from "@/lib/auth-storage";
-import { ApiError } from "@/lib/http-client";
-import { getVehiclesPaged } from "@/services/vehicle-service";
-
-type AuthContextValue = {
-  isAuthorized: boolean;
-  isChecking: boolean;
-  authorize: (apiKey: string) => Promise<boolean>;
-  logout: () => void;
-};
-
-const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+import { useEffect, useState, ReactNode } from "react";
+import { AuthContext } from "@/contexts/auth-context";
+import { clearApiKey } from "@/lib/auth-storage/clear-api-key";
+import { getApiKey } from "@/lib/auth-storage/get-api-key";
+import { setApiKey } from "@/lib/auth-storage/set-api-key";
+import { ApiError } from "@/lib/api-error";
+import { getVehiclesPaged } from "@/services/vehicles/get-vehicles-paged";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -57,10 +51,4 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       {children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within AuthProvider");
-  return context;
 }

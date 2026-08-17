@@ -1,9 +1,7 @@
 import { VehicleType } from "@/types/vehicle-type";
 import { VehicleColour } from "@/types/vehicle-colour";
 
-export type Vehicle = {
-  id: string;
-  registrationNumber: string;
+export type UpdateVehicleRequest = {
   vehicleType: VehicleType;
   make: string;
   model: string;
@@ -13,6 +11,4 @@ export type Vehicle = {
   pricePerDay: number;
   hireStartDate: string | null;
   hireEndDate: string | null;
-  imageUrls: string[];
-  createdDate: string;
 };

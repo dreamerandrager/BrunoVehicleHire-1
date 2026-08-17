@@ -12,21 +12,14 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TextFormField } from "@/components/text-form-field";
 import { SelectFormField } from "@/components/select-form-field";
-import { createVehicle, uploadVehicleImage } from "@/services/vehicle-service";
-import { VEHICLE_COLOURS, VEHICLE_TYPES } from "@/types/vehicle";
+import { LoadingSpinner } from "@/components/loading-spinner";
+import { createVehicle } from "@/services/vehicles/create-vehicle";
+import { uploadVehicleImage } from "@/services/vehicles/upload-vehicle-image";
+import { createVehicleSchema } from "@/schemas/create-vehicle-schema";
+import { VEHICLE_COLOURS } from "@/constants/vehicle-colours";
+import { VEHICLE_TYPES } from "@/constants/vehicle-types";
 
-const schema = z.object({
-  registrationNumber: z.string().min(1, "Required").max(20),
-  vehicleType: z.number().int().min(0).max(VEHICLE_TYPES.length - 1),
-  make: z.string().min(1, "Required").max(50),
-  model: z.string().min(1, "Required").max(50),
-  year: z.number().int().min(1900).max(new Date().getFullYear() + 1),
-  colour: z.number().int().min(0).max(VEHICLE_COLOURS.length - 1),
-  sellerName: z.string().min(1, "Required").max(100),
-  pricePerDay: z.number().positive("Must be greater than 0"),
-});
-
-type FormValues = z.infer<typeof schema>;
+type FormValues = z.infer<typeof createVehicleSchema>;
 
 export default function NewVehiclePage() {
   const router = useRouter();
@@ -34,7 +27,7 @@ export default function NewVehiclePage() {
   const [imageUploading, setImageUploading] = useState(false);
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(createVehicleSchema),
     defaultValues: {
       registrationNumber: "",
       vehicleType: 0,
@@ -98,7 +91,11 @@ export default function NewVehiclePage() {
               <Field>
                 <FieldLabel htmlFor="image">Image</FieldLabel>
                 <Input id="image" type="file" accept="image/*" onChange={handleImageSelect} />
-                {imageUploading && <p className="text-sm text-muted-foreground">Uploading...</p>}
+                {imageUploading && (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <LoadingSpinner /> Uploading...
+                  </div>
+                )}
                 {imageUrl && (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={imageUrl} alt="Vehicle" className="h-24 w-24 rounded object-cover" />
@@ -106,6 +103,7 @@ export default function NewVehiclePage() {
               </Field>
 
               <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting && <LoadingSpinner />}
                 {form.formState.isSubmitting ? "Creating..." : "Create Vehicle"}
               </Button>
             </FieldGroup>
