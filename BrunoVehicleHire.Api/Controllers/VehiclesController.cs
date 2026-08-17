@@ -1,5 +1,6 @@
 using BrunoVehicleHire.Application.Common.Models;
 using BrunoVehicleHire.Application.Vehicles.Commands.CreateVehicle;
+using BrunoVehicleHire.Application.Vehicles.Commands.SoftDeleteVehicle;
 using BrunoVehicleHire.Application.Vehicles.Commands.UpdateVehicle;
 using BrunoVehicleHire.Application.Vehicles.Dtos;
 using BrunoVehicleHire.Application.Vehicles.Queries.GetVehicleByRegistrationNumber;
@@ -58,5 +59,15 @@ public class VehiclesController : ControllerBase
         var vehicle = await _mediator.Send(command with { Id = id }, cancellationToken);
 
         return Ok(vehicle);
+    }
+
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> SoftDelete(Guid id, CancellationToken cancellationToken)
+    {
+        await _mediator.Send(new SoftDeleteVehicleCommand(id), cancellationToken);
+
+        return NoContent();
     }
 }
