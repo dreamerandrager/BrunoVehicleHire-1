@@ -72,7 +72,7 @@ export function EditVehicleForm({ vehicle, onSuccess }: { vehicle: Vehicle; onSu
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <div className="group relative mx-auto aspect-4/3 w-full max-w-sm">
-        <TableImage src={imageUrl} alt={vehicle.registrationNumber} className="size-full rounded-lg" />
+        <TableImage key={imageUrl} src={imageUrl} alt={vehicle.registrationNumber} className="size-full rounded-lg" />
 
         <button
           type="button"
