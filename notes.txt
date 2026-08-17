@@ -37,6 +37,10 @@ A: Nothing in between catches it - the ValidationException just propagates up th
 Q: How does Moq work briefly?
 A: Moq generates a fake in-memory implementation of an interface at runtime (no real DB/HTTP/etc behind it). new Mock<IVehicleRepository>() creates the fake; .Object is the actual instance passed into the handler's constructor same as DI would. .Setup(...) configures what a specific method call should return (anything not set up just returns a harmless default, doesn't throw). .Verify(...) asserts after the fact that a method was actually called, how many times, with what args - e.g. confirming AddAsync was called once. This only works because IVehicleRepository is an interface - Moq can't fake a concrete class's non-virtual members, which is part of why the repository is designed as an interface in the first place.
 
+Q: In theory, how would we add a new field via a migration, and do we need to manually chase down every place that references the old shape?
+A: 1) add the property to Vehicle (Domain), 2) update VehicleConfiguration if it needs specific mapping (Infrastructure), 3) "dotnet ef migrations add <Name>" - EF diffs against ApplicationDbContextModelSnapshot.cs and generates Up()/Down(), 4) "dotnet ef database update" to apply it.
+On due diligence: mostly yes, but the compiler does the heavy lifting. Since Vehicle's constructor and Update() take explicit params (not public setters), adding a required param breaks every existing call site (CreateVehicleCommandHandler, UpdateVehicleCommandHandler, unit tests constructing a Vehicle) at compile time until fixed - can't silently forget one. Still need to manually add it to the relevant Command(s), a validator rule if needed, VehicleDto + MappingExtensions.ToModel(), and eventually the frontend.
+
 Q: What is Swashbuckle?
 A: .NET library that auto-generates OpenAPI/Swagger docs from controllers/DTOs and serves the Swagger UI page. Satisfies the spec's "Swagger documentation enabled" requirement.
 
