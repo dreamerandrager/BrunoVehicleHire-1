@@ -7,4 +7,5 @@ export type UpdateVehicleRequest = {
   ownerName: string;
   pricePerDay: number;
   condition: number;
+  imageUrls: string[];
 };

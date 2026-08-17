@@ -200,18 +200,15 @@ export default function HomePage() {
           open
           onOpenChange={(open) => !open && setEditingVehicle(null)}
           title="Edit Vehicle"
-          className="sm:max-w-4xl"
+          className="sm:max-w-2xl"
         >
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <VehicleView vehicle={editingVehicle} />
-            <EditVehicleForm
-              vehicle={editingVehicle}
-              onSuccess={() => {
-                setEditingVehicle(null);
-                loadVehicles();
-              }}
-            />
-          </div>
+          <EditVehicleForm
+            vehicle={editingVehicle}
+            onSuccess={() => {
+              setEditingVehicle(null);
+              loadVehicles();
+            }}
+          />
         </Modal>
       )}
     </div>

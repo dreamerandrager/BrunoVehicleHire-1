@@ -28,7 +28,8 @@ public class UpdateVehicleCommandHandler : IRequestHandler<UpdateVehicleCommand,
             request.Colour,
             request.OwnerName,
             request.PricePerDay,
-            request.Condition);
+            request.Condition,
+            request.ImageUrls);
 
         await _vehicleRepository.SaveChangesAsync(cancellationToken);
 

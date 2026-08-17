@@ -32,7 +32,7 @@ export function SelectFormField<T extends FieldValues>({
           <FieldLabel>{label}</FieldLabel>
           <Select value={String(field.value)} onValueChange={(v) => field.onChange(Number(v))}>
             <SelectTrigger className="w-full">
-              <SelectValue />
+              <SelectValue>{(value: string) => options[Number(value)]}</SelectValue>
             </SelectTrigger>
             <SelectContent>
               {options.map((option, index) => (

@@ -13,5 +13,6 @@ public record UpdateVehicleCommand(
     VehicleColour Colour,
     string OwnerName,
     decimal PricePerDay,
-    VehicleCondition Condition
+    VehicleCondition Condition,
+    List<string>? ImageUrls
 ) : IRequest<VehicleDto>;
