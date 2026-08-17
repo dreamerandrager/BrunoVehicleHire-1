@@ -1,247 +1,169 @@
-'use client';
+"use client";
 
-import { useState, FormEvent } from 'react';
+import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { getVehiclesPaged, softDeleteVehicle } from "@/services/vehicle-service";
+import { PagedResult, Vehicle, VEHICLE_COLOURS, VEHICLE_TYPES } from "@/types/vehicle";
 
-// THROWAWAY TEST PAGE - hardcoded values, no services/models split, gets deleted before real frontend work.
-const API_BASE = 'https://localhost:7244';
-const API_KEY = 'bruno123';
+const PAGE_SIZE = 10;
 
-const VEHICLE_TYPES = ['Car', 'Suv', 'Van', 'Truck', 'Bus', 'Minibus', 'Motorcycle', 'Trailer', 'Tractor', 'Helicopter', 'Boat', 'Other'];
-const COLOURS = ['White', 'Black', 'Silver', 'Grey', 'Blue', 'Red', 'Green', 'Brown', 'Yellow', 'Orange'];
+export default function HomePage() {
+  const [pageNumber, setPageNumber] = useState(1);
+  const [data, setData] = useState<PagedResult<Vehicle> | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-type Vehicle = {
-  id: string;
-  registrationNumber: string;
-  vehicleType: number;
-  make: string;
-  model: string;
-  year: number;
-  colour: number;
-  sellerName: string;
-  pricePerDay: number;
-  imageUrls: string[];
-  createdDate: string;
-};
+  const loadVehicles = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
 
-export default function Home() {
-  const [mode, setMode] = useState<'idle' | 'search' | 'add'>('idle');
-
-  const [searchReg, setSearchReg] = useState('');
-  const [searchResult, setSearchResult] = useState<Vehicle | 'not-found' | null>(null);
-  const [searchLoading, setSearchLoading] = useState(false);
-
-  const [form, setForm] = useState({
-    registrationNumber: '',
-    vehicleType: 0,
-    make: '',
-    model: '',
-    year: new Date().getFullYear(),
-    colour: 0,
-    sellerName: '',
-    pricePerDay: 0,
-  });
-  const [addResult, setAddResult] = useState<Vehicle | null>(null);
-  const [addError, setAddError] = useState<string | null>(null);
-  const [addLoading, setAddLoading] = useState(false);
-
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [imageUploading, setImageUploading] = useState(false);
-  const [imageError, setImageError] = useState<string | null>(null);
-
-  async function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setImageUploading(true);
-    setImageError(null);
-    setImageUrl(null);
-
-    const body = new FormData();
-    body.append('file', file);
-
-    const res = await fetch(`${API_BASE}/api/images`, {
-      method: 'POST',
-      headers: { 'X-Api-Key': API_KEY },
-      body,
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      setImageUrl(data.url);
-    } else {
-      setImageError('Image upload failed.');
+    try {
+      setData(await getVehiclesPaged(pageNumber, PAGE_SIZE));
+    } catch {
+      setError("Failed to load vehicles.");
+    } finally {
+      setIsLoading(false);
     }
+  }, [pageNumber]);
 
-    setImageUploading(false);
-  }
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount/page-change, not derived state
+    loadVehicles();
+  }, [loadVehicles]);
 
-  async function handleSearch(e: FormEvent) {
-    e.preventDefault();
-    setSearchLoading(true);
-    setSearchResult(null);
-
-    const res = await fetch(`${API_BASE}/api/vehicles/${encodeURIComponent(searchReg)}`, {
-      headers: { 'X-Api-Key': API_KEY },
-    });
-
-    setSearchResult(res.status === 404 ? 'not-found' : await res.json());
-    setSearchLoading(false);
-  }
-
-  async function handleAdd(e: FormEvent) {
-    e.preventDefault();
-    setAddLoading(true);
-    setAddResult(null);
-    setAddError(null);
-
-    const res = await fetch(`${API_BASE}/api/vehicles`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Api-Key': API_KEY },
-      body: JSON.stringify({
-        ...form,
-        hireStartDate: null,
-        hireEndDate: null,
-        imageUrls: imageUrl ? [imageUrl] : [],
-      }),
-    });
-
-    const body = await res.json();
-    if (res.ok) {
-      setAddResult(body);
-    } else {
-      setAddError(JSON.stringify(body.errors ?? body, null, 2));
+  async function handleDelete(id: string) {
+    try {
+      await softDeleteVehicle(id);
+      toast.success("Vehicle deleted.");
+      loadVehicles();
+    } catch {
+      toast.error("Failed to delete vehicle.");
     }
-
-    setAddLoading(false);
   }
+
+  const totalPages = data ? Math.max(1, Math.ceil(data.totalCount / data.pageSize)) : 1;
 
   return (
-    <div className="min-h-screen flex flex-col items-center gap-8 p-16 bg-zinc-50">
-      <h1 className="text-2xl font-bold">Bruno Vehicle Hire — Test Page</h1>
-
-      <div className="flex gap-4">
-        <button onClick={() => setMode('search')} className="px-4 py-2 rounded bg-blue-600 text-white">
-          Search Vehicle
-        </button>
-        <button onClick={() => setMode('add')} className="px-4 py-2 rounded bg-green-600 text-white">
-          Add Vehicle
-        </button>
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 p-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-semibold">Vehicles</h1>
+        <Button render={<Link href="/vehicles/new" />} nativeButton={false}>Add Vehicle</Button>
       </div>
 
-      {mode === 'search' && (
-        <form onSubmit={handleSearch} className="flex flex-col gap-2 w-full max-w-sm">
-          <input
-            className="border p-2 rounded"
-            placeholder="Registration number"
-            value={searchReg}
-            onChange={(e) => setSearchReg(e.target.value)}
-          />
-          <button type="submit" className="px-4 py-2 rounded bg-blue-600 text-white">
-            {searchLoading ? 'Searching...' : 'Search'}
-          </button>
+      {isLoading && <p className="text-sm text-muted-foreground">Loading...</p>}
+      {error && <p className="text-sm text-destructive">{error}</p>}
 
-          {searchResult === 'not-found' && <p className="text-red-600">No vehicle found.</p>}
-          {searchResult && searchResult !== 'not-found' && (
-            <>
-              <pre className="bg-white border rounded p-3 text-sm whitespace-pre-wrap">
-                {JSON.stringify(searchResult, null, 2)}
-              </pre>
-              <div className="flex gap-2 flex-wrap">
-                {searchResult.imageUrls.map((url) => (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img key={url} src={url} alt="Vehicle" className="w-32 h-32 object-cover rounded border" />
-                ))}
-              </div>
-            </>
-          )}
-        </form>
-      )}
+      {!isLoading && !error && data && (
+        <>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Registration</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Make</TableHead>
+                <TableHead>Model</TableHead>
+                <TableHead>Year</TableHead>
+                <TableHead>Colour</TableHead>
+                <TableHead>Price/Day</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {data.items.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={8} className="text-center text-muted-foreground">
+                    No vehicles found.
+                  </TableCell>
+                </TableRow>
+              )}
+              {data.items.map((vehicle) => (
+                <TableRow key={vehicle.id}>
+                  <TableCell>{vehicle.registrationNumber}</TableCell>
+                  <TableCell>{VEHICLE_TYPES[vehicle.vehicleType]}</TableCell>
+                  <TableCell>{vehicle.make}</TableCell>
+                  <TableCell>{vehicle.model}</TableCell>
+                  <TableCell>{vehicle.year}</TableCell>
+                  <TableCell>{VEHICLE_COLOURS[vehicle.colour]}</TableCell>
+                  <TableCell>R{vehicle.pricePerDay.toFixed(2)}</TableCell>
+                  <TableCell className="flex justify-end gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      render={<Link href={`/vehicles/${vehicle.registrationNumber}/edit`} />}
+                      nativeButton={false}
+                    >
+                      Edit
+                    </Button>
+                    <AlertDialog>
+                      <AlertDialogTrigger render={<Button variant="destructive" size="sm" />}>
+                        Delete
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Delete this vehicle?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            {vehicle.registrationNumber} will be removed from the fleet listing. This can&apos;t be undone from here.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => handleDelete(vehicle.id)}>
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
 
-      {mode === 'add' && (
-        <form onSubmit={handleAdd} className="flex flex-col gap-2 w-full max-w-sm">
-          <input
-            className="border p-2 rounded"
-            placeholder="Registration number"
-            value={form.registrationNumber}
-            onChange={(e) => setForm({ ...form, registrationNumber: e.target.value })}
-          />
-          <select
-            className="border p-2 rounded"
-            value={form.vehicleType}
-            onChange={(e) => setForm({ ...form, vehicleType: Number(e.target.value) })}
-          >
-            {VEHICLE_TYPES.map((type, i) => (
-              <option key={type} value={i}>{type}</option>
-            ))}
-          </select>
-          <input
-            className="border p-2 rounded"
-            placeholder="Make"
-            value={form.make}
-            onChange={(e) => setForm({ ...form, make: e.target.value })}
-          />
-          <input
-            className="border p-2 rounded"
-            placeholder="Model"
-            value={form.model}
-            onChange={(e) => setForm({ ...form, model: e.target.value })}
-          />
-          <input
-            type="number"
-            className="border p-2 rounded"
-            placeholder="Year"
-            value={form.year}
-            onChange={(e) => setForm({ ...form, year: Number(e.target.value) })}
-          />
-          <select
-            className="border p-2 rounded"
-            value={form.colour}
-            onChange={(e) => setForm({ ...form, colour: Number(e.target.value) })}
-          >
-            {COLOURS.map((colour, i) => (
-              <option key={colour} value={i}>{colour}</option>
-            ))}
-          </select>
-          <input
-            className="border p-2 rounded"
-            placeholder="Seller name"
-            value={form.sellerName}
-            onChange={(e) => setForm({ ...form, sellerName: e.target.value })}
-          />
-          <input
-            type="number"
-            className="border p-2 rounded"
-            placeholder="Price per day"
-            value={form.pricePerDay}
-            onChange={(e) => setForm({ ...form, pricePerDay: Number(e.target.value) })}
-          />
-          <input type="file" accept="image/*" onChange={handleFileSelect} className="border p-2 rounded bg-white" />
-          {imageUploading && <p className="text-sm text-zinc-500">Uploading image...</p>}
-          {imageError && <p className="text-sm text-red-600">{imageError}</p>}
-          {imageUrl && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={imageUrl} alt="Uploaded vehicle" className="w-32 h-32 object-cover rounded border" />
-          )}
-
-          <button type="submit" className="px-4 py-2 rounded bg-green-600 text-white">
-            {addLoading ? 'Adding...' : 'Add Vehicle'}
-          </button>
-
-          {addResult && (
-            <>
-              <pre className="bg-white border rounded p-3 text-sm whitespace-pre-wrap">
-                {JSON.stringify(addResult, null, 2)}
-              </pre>
-              <div className="flex gap-2 flex-wrap">
-                {addResult.imageUrls.map((url) => (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img key={url} src={url} alt="Vehicle" className="w-32 h-32 object-cover rounded border" />
-                ))}
-              </div>
-            </>
-          )}
-          {addError && <pre className="text-red-600 whitespace-pre-wrap text-sm">{addError}</pre>}
-        </form>
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-muted-foreground">
+              Page {data.pageNumber} of {totalPages} ({data.totalCount} total)
+            </p>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={pageNumber <= 1}
+                onClick={() => setPageNumber((p) => p - 1)}
+              >
+                Previous
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={pageNumber >= totalPages}
+                onClick={() => setPageNumber((p) => p + 1)}
+              >
+                Next
+              </Button>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

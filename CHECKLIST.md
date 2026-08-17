@@ -28,21 +28,21 @@
 - [x] Unit tests: ≥1 Command, ≥1 Query
 
 ### Checklist — Frontend (React)
-- [ ] Functional components + TypeScript
-- [ ] Vite scaffold
-- [ ] Axios or Fetch service layer
-- [ ] React Router
-- [ ] Folder separation: pages / components / services / models
-- [ ] Paginated list view
-- [ ] Create form
-- [ ] Edit form
-- [ ] Delete action
-- [ ] Loading states
-- [ ] Error handling
-- [ ] Client-side validation
-- [ ] Environment-based API config (no hardcoded URLs)
-- [ ] Basic reusable components (button, form input)
-- [ ] Clear state management approach
+- [x] Functional components + TypeScript
+- [x] Vite scaffold — Next.js instead (logged deviation), functionally equivalent React+TS scaffold
+- [x] Axios or Fetch service layer
+- [x] React Router — Next.js App Router file-based routing instead (logged deviation)
+- [x] Folder separation: pages / components / services / models
+- [x] Paginated list view
+- [x] Create form
+- [x] Edit form
+- [x] Delete action
+- [x] Loading states
+- [x] Error handling
+- [x] Client-side validation
+- [x] Environment-based API config (no hardcoded URLs)
+- [x] Basic reusable components (button, form input)
+- [x] Clear state management approach
 
 ### Checklist — Deployment (not spec-required, planned anyway)
 - [ ] Hosting target chosen (backend + frontend + Postgres)
