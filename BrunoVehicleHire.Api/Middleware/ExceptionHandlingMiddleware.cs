@@ -1,3 +1,4 @@
+using BrunoVehicleHire.Application.Common.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,6 +32,20 @@ public class ExceptionHandlingMiddleware
             };
 
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            context.Response.ContentType = "application/problem+json";
+
+            await context.Response.WriteAsJsonAsync(problemDetails);
+        }
+        catch (NotFoundException ex)
+        {
+            var problemDetails = new ProblemDetails
+            {
+                Status = StatusCodes.Status404NotFound,
+                Title = "Resource not found.",
+                Detail = ex.Message
+            };
+
+            context.Response.StatusCode = StatusCodes.Status404NotFound;
             context.Response.ContentType = "application/problem+json";
 
             await context.Response.WriteAsJsonAsync(problemDetails);

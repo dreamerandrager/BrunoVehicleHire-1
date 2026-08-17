@@ -3,4 +3,4 @@ using MediatR;
 
 namespace BrunoVehicleHire.Application.Vehicles.Queries.GetVehicleByRegistrationNumber;
 
-public record GetVehicleByRegistrationNumberQuery(string RegistrationNumber) : IRequest<VehicleDto?>;
+public record GetVehicleByRegistrationNumberQuery(string RegistrationNumber) : IRequest<VehicleDto>;
