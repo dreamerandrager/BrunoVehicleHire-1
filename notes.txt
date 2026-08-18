@@ -184,3 +184,5 @@ dotnet add BrunoVehicleHire.Infrastructure package Microsoft.EntityFrameworkCore
 dotnet add BrunoVehicleHire.Api package Swashbuckle.AspNetCore
 
 Verified with: dotnet build
+
+test
