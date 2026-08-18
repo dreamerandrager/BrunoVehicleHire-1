@@ -37,7 +37,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
 
-builder.Services.Configure<AzureBlobStorageOptions>(builder.Configuration.GetSection("AzureBlobStorage"));
+builder.Services.Configure<AzureBlobStorageOptions>(builder.Configuration.GetSection("BlobStorage"));
 builder.Services.AddScoped<IBlobStorageService, AzureBlobStorageService>();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateVehicleCommand).Assembly));
