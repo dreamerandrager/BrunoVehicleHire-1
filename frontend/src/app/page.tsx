@@ -36,6 +36,8 @@ import { Vehicle } from "@/types/vehicle";
 import { VEHICLE_COLOURS } from "@/constants/vehicle-colours";
 import { VEHICLE_TYPES } from "@/constants/vehicle-types";
 
+
+
 export default function HomePage() {
   const [pageNumber, setPageNumber] = useState(1);
   const [data, setData] = useState<PagedResult<Vehicle> | null>(null);
