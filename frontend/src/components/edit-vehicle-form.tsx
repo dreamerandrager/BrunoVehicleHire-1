@@ -95,7 +95,7 @@ export function EditVehicleForm({ vehicle, onSuccess }: { vehicle: Vehicle; onSu
           <TextFormField name="year" control={form.control} label="Year" type="number" />
           <SelectFormField name="colour" control={form.control} label="Colour" options={VEHICLE_COLOURS} />
           <TextFormField name="ownerName" control={form.control} label="Owner Name" />
-          <TextFormField name="pricePerDay" control={form.control} label="Price Per Day" type="number" step="0.01" />
+          <TextFormField name="pricePerDay" control={form.control} label="Price Per Day (R)" type="number" step="0.01" />
           <SelectFormField name="condition" control={form.control} label="Condition" options={VEHICLE_CONDITIONS} />
         </div>
 

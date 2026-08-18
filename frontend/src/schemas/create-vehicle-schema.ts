@@ -1,6 +1,7 @@
 import * as z from "zod";
 import { VEHICLE_TYPES } from "@/constants/vehicle-types";
 import { VEHICLE_COLOURS } from "@/constants/vehicle-colours";
+import { VEHICLE_CONDITIONS } from "@/constants/vehicle-conditions";
 
 export const createVehicleSchema = z.object({
   registrationNumber: z.string().min(1, "Required").max(20),
@@ -11,4 +12,5 @@ export const createVehicleSchema = z.object({
   colour: z.number().int().min(0).max(VEHICLE_COLOURS.length - 1),
   ownerName: z.string().min(1, "Required").max(100),
   pricePerDay: z.number().positive("Must be greater than 0"),
+  condition: z.number().int().min(0).max(VEHICLE_CONDITIONS.length - 1),
 });

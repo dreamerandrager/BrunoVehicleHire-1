@@ -19,6 +19,7 @@ import { createVehicle } from "@/services/vehicle-service";
 import { uploadImage } from "@/services/image-service";
 import { createVehicleSchema } from "@/schemas/create-vehicle-schema";
 import { VEHICLE_COLOURS } from "@/constants/vehicle-colours";
+import { VEHICLE_CONDITIONS } from "@/constants/vehicle-conditions";
 import { VEHICLE_TYPES } from "@/constants/vehicle-types";
 
 type FormValues = z.infer<typeof createVehicleSchema>;
@@ -39,6 +40,7 @@ export default function NewVehiclePage() {
       colour: 0,
       ownerName: "",
       pricePerDay: 0,
+      condition: 0,
     },
   });
 
@@ -61,7 +63,6 @@ export default function NewVehiclePage() {
     try {
       await createVehicle({
         ...values,
-        condition: 0, // TODO: no condition input control yet - defaults to Poor until the UI is designed
         imageUrls: imageUrl ? [imageUrl] : [],
       });
       toast.success("Vehicle created.");
@@ -88,7 +89,8 @@ export default function NewVehiclePage() {
               <TextFormField name="year" control={form.control} label="Year" type="number" />
               <SelectFormField name="colour" control={form.control} label="Colour" options={VEHICLE_COLOURS} />
               <TextFormField name="ownerName" control={form.control} label="Owner Name" />
-              <TextFormField name="pricePerDay" control={form.control} label="Price Per Day" type="number" step="0.01" />
+              <TextFormField name="pricePerDay" control={form.control} label="Price Per Day (R)" type="number" step="0.01" />
+              <SelectFormField name="condition" control={form.control} label="Condition" options={VEHICLE_CONDITIONS} />
 
               <Field>
                 <FieldLabel htmlFor="image">Image</FieldLabel>
