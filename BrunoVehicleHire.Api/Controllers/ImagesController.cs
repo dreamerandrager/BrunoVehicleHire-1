@@ -28,5 +28,6 @@ public class ImagesController : ControllerBase
         var url = await _blobStorageService.UploadAsync(stream, file.FileName, file.ContentType, cancellationToken);
 
         return Ok(new { url });
+        //yo
     }
 }
