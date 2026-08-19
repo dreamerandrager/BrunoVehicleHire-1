@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -30,13 +31,11 @@ import { Modal } from "@/components/modal";
 import { VehicleView } from "@/components/vehicle-view";
 import { EditVehicleForm } from "@/components/edit-vehicle-form";
 import { getErrorMessage } from "@/lib/get-error-message";
-import { getVehiclesPaged, softDeleteVehicle } from "@/services/vehicle-service";
+import { getVehicleByRegistrationNumber, getVehiclesPaged, softDeleteVehicle } from "@/services/vehicle-service";
 import { PagedResult } from "@/types/paged-result";
 import { Vehicle } from "@/types/vehicle";
 import { VEHICLE_COLOURS } from "@/constants/vehicle-colours";
 import { VEHICLE_TYPES } from "@/constants/vehicle-types";
-
-
 
 export default function HomePage() {
   const [pageNumber, setPageNumber] = useState(1);
@@ -46,6 +45,9 @@ export default function HomePage() {
 
   const [viewingVehicle, setViewingVehicle] = useState<Vehicle | null>(null);
   const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
 
   const loadVehicles = useCallback(async () => {
     setIsLoading(true);
@@ -65,6 +67,21 @@ export default function HomePage() {
     loadVehicles();
   }, [loadVehicles]);
 
+  async function handleSearch(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!searchTerm.trim()) return;
+
+    setIsSearching(true);
+    try {
+      const vehicle = await getVehicleByRegistrationNumber(searchTerm.trim());
+      setViewingVehicle(vehicle);
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Vehicle not found."));
+    } finally {
+      setIsSearching(false);
+    }
+  }
+
   async function handleDelete(id: string) {
     try {
       await softDeleteVehicle(id);
@@ -79,9 +96,23 @@ export default function HomePage() {
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 p-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-4">
         <h1 className="text-xl font-semibold">Vehicles</h1>
-        <Button render={<Link href="/vehicles/new" />} nativeButton={false}>Add Vehicle</Button>
+        <div className="flex items-center gap-2">
+          <form onSubmit={handleSearch} className="flex items-center gap-2">
+            <Input
+              placeholder="Search by registration number"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-64"
+            />
+            <Button type="submit" variant="outline" disabled={isSearching}>
+              {isSearching && <LoadingSpinner />}
+              {isSearching ? "Searching..." : "Search"}
+            </Button>
+          </form>
+          <Button render={<Link href="/vehicles/new" />} nativeButton={false}>Add Vehicle</Button>
+        </div>
       </div>
 
       {isLoading && (
