@@ -49,7 +49,7 @@ const string FrontendCorsPolicy = "FrontendCorsPolicy";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(FrontendCorsPolicy, policy =>
-        policy.WithOrigins("http://localhost:3000", "https://brunovehiclehire.vercel.app")
+        policy.WithOrigins("http://localhost:3000", "https://bruno-vehicle-hire.vercel.app")
               .AllowAnyHeader()
               .AllowAnyMethod());
 });
