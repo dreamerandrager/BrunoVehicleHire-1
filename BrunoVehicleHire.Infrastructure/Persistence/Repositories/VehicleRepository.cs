@@ -20,7 +20,10 @@ public class VehicleRepository : IVehicleRepository
 
     public async Task<Vehicle?> GetByRegistrationNumberAsync(string registrationNumber, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Vehicles.FirstOrDefaultAsync(v => v.RegistrationNumber == registrationNumber, cancellationToken);
+        return await _dbContext.Vehicles
+            .Where(v => EF.Functions.ILike(v.RegistrationNumber, $"%{registrationNumber}%"))
+            .OrderByDescending(v => v.CreatedDate)
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<bool> RegistrationNumberExistsAsync(string registrationNumber, CancellationToken cancellationToken = default)
