@@ -4,7 +4,7 @@ Clean Architecture .NET API (Domain/Application/Infrastructure/Api) + Next.js fr
 
 ## Live deployment
 
-- Frontend: https://brunovehiclehire.vercel.app
+- Frontend: https://bruno-vehicle-hire.vercel.app
 - Backend API: https://bruno-vehicle-hire-api-dndcf8bsgqcmaea3.southafricanorth-01.azurewebsites.net
 - Swagger is only available locally (see below) — disabled in production.
 
