@@ -16,13 +16,13 @@ import { applyFieldErrors } from "@/lib/apply-field-errors";
 import { getErrorMessage } from "@/lib/get-error-message";
 import { updateVehicle } from "@/services/vehicle-service";
 import { uploadImage } from "@/services/image-service";
-import { updateVehicleSchema } from "@/schemas/update-vehicle-schema";
+import { baseVehicleSchema } from "@/schemas/base-vehicle-schema";
 import { VEHICLE_COLOURS } from "@/constants/vehicle-colours";
 import { VEHICLE_CONDITIONS } from "@/constants/vehicle-conditions";
 import { VEHICLE_TYPES } from "@/constants/vehicle-types";
 import { Vehicle } from "@/types/vehicle";
 
-type FormValues = z.infer<typeof updateVehicleSchema>;
+type FormValues = z.infer<typeof baseVehicleSchema>;
 
 export function EditVehicleForm({ vehicle, onSuccess }: { vehicle: Vehicle; onSuccess: () => void }) {
   const [imageUrl, setImageUrl] = useState<string | undefined>(vehicle.imageUrls[0]);
@@ -30,7 +30,7 @@ export function EditVehicleForm({ vehicle, onSuccess }: { vehicle: Vehicle; onSu
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(updateVehicleSchema),
+    resolver: zodResolver(baseVehicleSchema),
     defaultValues: {
       vehicleType: vehicle.vehicleType,
       make: vehicle.make,

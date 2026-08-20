@@ -4,7 +4,7 @@ import { VEHICLE_COLOURS } from "@/constants/vehicle-colours";
 import { VEHICLE_CONDITIONS } from "@/constants/vehicle-conditions";
 import { isPersonName, isWordsOfLettersAndDigits } from "@/lib/validation-helpers";
 
-export const updateVehicleSchema = z.object({
+export const baseVehicleSchema = z.object({
   vehicleType: z.number().int().min(0).max(VEHICLE_TYPES.length - 1),
   make: z
     .string()
@@ -16,7 +16,11 @@ export const updateVehicleSchema = z.object({
     .min(1, "Required")
     .max(30)
     .refine(isWordsOfLettersAndDigits, "Only letters, numbers, and single spaces are allowed"),
-  year: z.number().int().min(1900).max(new Date().getFullYear() + 1),
+  year: z
+    .number()
+    .int("Year must be a whole number")
+    .min(1900, "Year must be 1900 or later")
+    .max(new Date().getFullYear() + 1, `Year must be ${new Date().getFullYear() + 1} or earlier`),
   colour: z.number().int().min(0).max(VEHICLE_COLOURS.length - 1),
   ownerName: z
     .string()
