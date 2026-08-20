@@ -8,6 +8,8 @@ namespace BrunoVehicleHire.Application.Vehicles.Queries.GetVehiclesPaged;
 
 public class GetVehiclesPagedQueryHandler : IRequestHandler<GetVehiclesPagedQuery, PagedResult<VehicleDto>>
 {
+    private const int MaxPageSize = 100;
+
     private readonly IVehicleRepository _vehicleRepository;
 
     public GetVehiclesPagedQueryHandler(IVehicleRepository vehicleRepository)
@@ -17,14 +19,16 @@ public class GetVehiclesPagedQueryHandler : IRequestHandler<GetVehiclesPagedQuer
 
     public async Task<PagedResult<VehicleDto>> Handle(GetVehiclesPagedQuery request, CancellationToken cancellationToken)
     {
-        var (items, totalCount) = await _vehicleRepository.GetPagedAsync(request.PageNumber, request.PageSize, cancellationToken);
+        var pageSize = Math.Min(request.PageSize, MaxPageSize);
+
+        var (items, totalCount) = await _vehicleRepository.GetPagedAsync(request.PageNumber, pageSize, cancellationToken);
 
         return new PagedResult<VehicleDto>
         {
             Items = items.Select(v => v.ToModel()).ToList(),
             TotalCount = totalCount,
             PageNumber = request.PageNumber,
-            PageSize = request.PageSize
+            PageSize = pageSize
         };
     }
 }

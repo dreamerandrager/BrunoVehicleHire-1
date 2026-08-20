@@ -7,6 +7,6 @@ public class GetVehiclesPagedQueryValidator : AbstractValidator<GetVehiclesPaged
     public GetVehiclesPagedQueryValidator()
     {
         RuleFor(x => x.PageNumber).GreaterThanOrEqualTo(1);
-        RuleFor(x => x.PageSize).InclusiveBetween(1, 100);
+        RuleFor(x => x.PageSize).GreaterThanOrEqualTo(1);
     }
 }
