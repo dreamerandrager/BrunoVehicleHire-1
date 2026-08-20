@@ -14,6 +14,7 @@ import { TextFormField } from "@/components/text-form-field";
 import { SelectFormField } from "@/components/select-form-field";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { BackButton } from "@/components/back-button";
+import { applyFieldErrors } from "@/lib/apply-field-errors";
 import { getErrorMessage } from "@/lib/get-error-message";
 import { createVehicle } from "@/services/vehicle-service";
 import { uploadImage } from "@/services/image-service";
@@ -68,7 +69,9 @@ export default function NewVehiclePage() {
       toast.success("Vehicle created.");
       router.push("/");
     } catch (error) {
-      toast.error(getErrorMessage(error, "Failed to create vehicle."));
+      if (!applyFieldErrors(error, form.setError)) {
+        toast.error(getErrorMessage(error, "Failed to create vehicle."));
+      }
     }
   }
 

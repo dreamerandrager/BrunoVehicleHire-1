@@ -12,6 +12,7 @@ import { TextFormField } from "@/components/text-form-field";
 import { SelectFormField } from "@/components/select-form-field";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { TableImage } from "@/components/table-image";
+import { applyFieldErrors } from "@/lib/apply-field-errors";
 import { getErrorMessage } from "@/lib/get-error-message";
 import { updateVehicle } from "@/services/vehicle-service";
 import { uploadImage } from "@/services/image-service";
@@ -66,7 +67,9 @@ export function EditVehicleForm({ vehicle, onSuccess }: { vehicle: Vehicle; onSu
       toast.success("Vehicle updated.");
       onSuccess();
     } catch (error) {
-      toast.error(getErrorMessage(error, "Failed to update vehicle."));
+      if (!applyFieldErrors(error, form.setError)) {
+        toast.error(getErrorMessage(error, "Failed to update vehicle."));
+      }
     }
   }
 
