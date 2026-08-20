@@ -9,7 +9,7 @@ export const updateVehicleSchema = z.object({
   make: z
     .string()
     .min(1, "Required")
-    .max(30)
+    .max(33)
     .refine(isWordsOfLettersAndDigits, "Only letters, numbers, and single spaces are allowed"),
   model: z
     .string()
